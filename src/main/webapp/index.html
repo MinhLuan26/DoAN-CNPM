@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match Game</title>
+    <style>
+        :root {
+            --primary: #4e54c8;
+            --bg: #8f94fb;
+            --card-bg: #ffffff;
+        }
+        body {
+            margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, var(--primary), var(--bg));
+            color: white; display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+        #app { width: 100%; max-width: 800px; padding: 20px; box-sizing: border-box; }
+        .hidden { display: none !important; }
+        
+        /* Card Container */
+        .panel {
+            background: rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center; margin-bottom: 20px;
+        }
+        
+        /* Inputs & Buttons */
+        input, select {
+            width: 80%; padding: 10px; margin: 10px 0; border: none; border-radius: 5px; outline: none;
+        }
+        button {
+            padding: 10px 20px; margin: 5px; border: none; border-radius: 5px;
+            background: #ff4757; color: white; font-weight: bold; cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { background: #ff6b81; transform: scale(1.05); }
+
+        /* Game Board */
+        #game-board {
+            display: grid; gap: 10px; justify-content: center; margin-top: 20px; perspective: 1000px;
+        }
+        .card {
+            width: 80px; height: 80px; background-color: transparent; cursor: pointer;
+            position: relative; transform-style: preserve-3d; transition: transform 0.6s;
+        }
+        .card.flipped { transform: rotateY(180deg); }
+        .card-front, .card-back {
+            width: 100%; height: 100%; position: absolute; backface-visibility: hidden;
+            display: flex; align-items: center; justify-content: center; font-size: 40px;
+            border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .card-back { background: var(--card-bg); transform: rotateY(180deg); }
+        .card-front { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+        
+        /* Stats */
+        .stats { display: flex; justify-content: space-between; font-size: 1.2em; font-weight: bold; }
+        .player-active { color: #f1c40f; text-shadow: 0 0 10px #f1c40f; }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div style="text-align: right; margin-bottom: 10px;">
+            <select id="lang-select" style="width: auto; padding: 5px;" onchange="changeLang()">
+                <option value="vi">🇻🇳 Tiếng Việt</option>
+                <option value="en">🇬🇧 English</option>
+            </select>
+        </div>
+
+        <div id="auth-screen" class="panel">
+            <h2 id="t-login-title">Đăng Nhập / Đăng Ký</h2>
+            <input type="text" id="username" placeholder="Tên tài khoản"><br>
+            <input type="password" id="password" placeholder="Mật khẩu"><br>
+            <button onclick="authenticate('login')" id="t-btn-login">Đăng nhập</button>
+            <button onclick="authenticate('register')" id="t-btn-reg" style="background:#2ed573;">Đăng ký</button>
+            <p id="auth-msg" style="color: #ffeaa7; font-weight: bold;"></p>
+        </div>
+
+        <div id="menu-screen" class="panel hidden">
+            <h2 id="welcome-msg"></h2>
+            <h3 id="t-settings">Cài đặt trò chơi</h3>
+            <select id="difficulty">
+                <option value="16">Dễ (4x4) - 60s</option>
+                <option value="36">Khó (6x6) - 120s</option>
+            </select>
+            <select id="mode">
+                <option value="1">1 Người chơi</option>
+                <option value="2">2 Người chơi (Chơi chung máy)</option>
+            </select><br>
+            <button onclick="startGame()" id="t-btn-start" style="font-size: 1.2em; padding: 15px 30px;">Bắt đầu Game</button>
+        </div>
+
+        <div id="game-screen" class="panel hidden">
+            <div class="stats">
+                <span id="timer-display">⏱: <span id="time-left">60</span>s</span>
+                <span id="p1-score" class="player-active">P1: <span id="score1">0</span></span>
+                <span id="p2-score" class="hidden">P2: <span id="score2">0</span></span>
+            </div>
+            <div id="game-board"></div>
+            <button onclick="quitGame()" id="t-btn-quit" style="margin-top: 20px;">Thoát</button>
+        </div>
+    </div>
+
+    <script>
+        // --- CẤU HÌNH NGÔN NGỮ ---
+        const i18n = {
+            vi: {
+                loginTitle: "Đăng Nhập / Đăng Ký", btnLogin: "Đăng nhập", btnReg: "Đăng ký",
+                settings: "Cài đặt trò chơi", btnStart: "Bắt đầu Game", btnQuit: "Thoát",
+                win1: "Bạn đã thắng!", win2: "Người chơi 1 Thắng!", win3: "Người chơi 2 Thắng!", draw: "Hòa nhau!",
+                timeOut: "Hết giờ! Bạn đã thua.", errAuth: "Vui lòng nhập đủ thông tin"
+            },
+            en: {
+                loginTitle: "Login / Register", btnLogin: "Login", btnReg: "Register",
+                settings: "Game Settings", btnStart: "Start Game", btnQuit: "Quit",
+                win1: "You Won!", win2: "Player 1 Wins!", win3: "Player 2 Wins!", draw: "It's a Draw!",
+                timeOut: "Time's up! You lost.", errAuth: "Please enter all fields"
+            }
+        };
+        let lang = 'vi';
+        let currentUser = '';
+
+        // --- TRẠNG THÁI GAME ---
+        const emojis = ['🍎','🍌','🍉','🍇','🍓','🍒','🍍','🥝','🥑','🌽','🥕','🍕','🍔','🍟','🌭','🍿','🍩','🍰'];
+        let cards = [], hasFlippedCard = false, lockBoard = false;
+        let firstCard, secondCard;
+        let timer, timeLeft, matchesFound, totalPairs;
+        let isMultiplayer, currentPlayer, scores = [0, 0];
+
+        // --- GIAO DIỆN & XỬ LÝ OFFLINE ---
+        function changeLang() {
+            lang = document.getElementById('lang-select').value;
+            document.getElementById('t-login-title').innerText = i18n[lang].loginTitle;
+            document.getElementById('t-btn-login').innerText = i18n[lang].btnLogin;
+            document.getElementById('t-btn-reg').innerText = i18n[lang].btnReg;
+            document.getElementById('t-settings').innerText = i18n[lang].settings;
+            document.getElementById('t-btn-start').innerText = i18n[lang].btnStart;
+            document.getElementById('t-btn-quit').innerText = i18n[lang].btnQuit;
+        }
+
+        // TÍNH NĂNG MỚI: Xử lý đăng nhập trực tiếp không cần Server Java
+        function authenticate(action) {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const msgBox = document.getElementById('auth-msg');
+
+            if (!u || !p) { alert(i18n[lang].errAuth); return; }
+
+            const userKey = 'MemoryGame_' + u;
+
+            if (action === 'register') {
+                if (localStorage.getItem(userKey)) {
+                    msgBox.innerText = "Tài khoản đã tồn tại! Vui lòng đăng nhập.";
+                } else {
+                    localStorage.setItem(userKey, p);
+                    msgBox.innerText = "Đăng ký thành công! Hãy bấm Đăng nhập.";
+                }
+            } else if (action === 'login') {
+                const savedPass = localStorage.getItem(userKey);
+                if (savedPass === p) {
+                    currentUser = u;
+                    msgBox.innerText = "";
+                    document.getElementById('auth-screen').classList.add('hidden');
+                    document.getElementById('menu-screen').classList.remove('hidden');
+                    document.getElementById('welcome-msg').innerText = `Xin chào, ${currentUser}!`;
+                } else {
+                    msgBox.innerText = "Sai tài khoản hoặc mật khẩu!";
+                }
+            }
+        }
+
+        // --- LOGIC GAME ---
+        function startGame() {
+            const difficulty = parseInt(document.getElementById('difficulty').value);
+            isMultiplayer = document.getElementById('mode').value === '2';
+            
+            document.getElementById('menu-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            
+            totalPairs = difficulty / 2;
+            timeLeft = difficulty === 16 ? 60 : 120;
+            matchesFound = 0;
+            scores = [0, 0];
+            currentPlayer = 1;
+            
+            updateScoreUI();
+            if (isMultiplayer) document.getElementById('p2-score').classList.remove('hidden');
+            else document.getElementById('p2-score').classList.add('hidden');
+
+            setupBoard(difficulty);
+            startTimer();
+        }
+
+        function setupBoard(numCards) {
+            const board = document.getElementById('game-board');
+            board.innerHTML = '';
+            board.style.gridTemplateColumns = numCards === 16 ? 'repeat(4, 80px)' : 'repeat(6, 80px)';
+            
+            let gameEmojis = emojis.slice(0, numCards / 2);
+            let deck = [...gameEmojis, ...gameEmojis];
+            deck.sort(() => Math.random() - 0.5);
+
+            deck.forEach(emoji => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.val = emoji;
+                card.innerHTML = `<div class="card-front"></div><div class="card-back">${emoji}</div>`;
+                card.addEventListener('click', flipCard);
+                board.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+
+            this.classList.add('flipped');
+
+            if (!hasFlippedCard) {
+                hasFlippedCard = true;
+                firstCard = this;
+                return;
+            }
+            secondCard = this;
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            let isMatch = firstCard.dataset.val === secondCard.dataset.val;
+
+            if (isMatch) {
+                disableCards();
+                scores[currentPlayer - 1]++;
+                matchesFound++;
+                updateScoreUI();
+                
+                if (matchesFound === totalPairs) {
+                    clearInterval(timer);
+                    setTimeout(declareWinner, 500);
+                }
+            } else {
+                unflipCards();
+            }
+        }
+
+        function disableCards() {
+            firstCard.removeEventListener('click', flipCard);
+            secondCard.removeEventListener('click', flipCard);
+            resetBoard();
+        }
+
+        function unflipCards() {
+            lockBoard = true;
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                secondCard.classList.remove('flipped');
+                
+                if (isMultiplayer) {
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+                    updateScoreUI();
+                }
+                resetBoard();
+            }, 1000);
+        }
+
+        function resetBoard() {
+            [hasFlippedCard, lockBoard] = [false, false];
+            [firstCard, secondCard] = [null, null];
+        }
+
+        function updateScoreUI() {
+            document.getElementById('score1').innerText = scores[0];
+            document.getElementById('score2').innerText = scores[1];
+            
+            if (isMultiplayer) {
+                document.getElementById('p1-score').classList.toggle('player-active', currentPlayer === 1);
+                document.getElementById('p2-score').classList.toggle('player-active', currentPlayer === 2);
+            }
+        }
+
+        function startTimer() {
+            document.getElementById('time-left').innerText = timeLeft;
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('time-left').innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    lockBoard = true;
+                    alert(i18n[lang].timeOut);
+                    quitGame();
+                }
+            }, 1000);
+        }
+
+        function declareWinner() {
+            if (!isMultiplayer) {
+                alert(i18n[lang].win1);
+            } else {
+                if (scores[0] > scores[1]) alert(i18n[lang].win2);
+                else if (scores[1] > scores[0]) alert(i18n[lang].win3);
+                else alert(i18n[lang].draw);
+            }
+            quitGame();
+        }
+
+        function quitGame() {
+            clearInterval(timer);
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
