@@ -1,0 +1,80 @@
+:root {
+    --primary: #4e54c8;
+    --secondary: #8f94fb;
+    --success: #2ed573;
+    --danger: #ff4757;
+    --text: #ffffff;
+    --card-bg: #ffffff;
+}
+
+body {
+    margin: 0; font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: var(--text); display: flex; justify-content: center;
+    min-height: 100vh; padding: 20px; box-sizing: border-box;
+}
+
+#app { width: 100%; max-width: 800px; }
+.hidden { display: none !important; }
+
+/* Panels */
+.panel {
+    background: rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 15px;
+    backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Forms & Buttons */
+input, select {
+    width: 90%; padding: 12px; margin: 10px 0; border: none; border-radius: 8px;
+    background: rgba(255,255,255,0.9); font-size: 1rem;
+}
+.btn {
+    padding: 10px 20px; margin: 5px; border: none; border-radius: 8px;
+    font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 1rem;
+    color: white;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+.btn.primary { background: #3742fa; }
+.btn.success { background: var(--success); }
+.btn.danger { background: var(--danger); }
+.btn.large { padding: 15px 40px; font-size: 1.2rem; background: #ffa502; }
+.btn.outline { background: transparent; border: 2px solid var(--danger); color: var(--danger); }
+.btn.outline:hover { background: var(--danger); color: white; }
+.msg { color: #ffeaa7; font-weight: bold; min-height: 20px; }
+
+/* Game Board */
+#game-board {
+    display: grid; gap: 10px; justify-content: center; margin-top: 20px; perspective: 1000px;
+}
+.card {
+    width: 70px; height: 70px; cursor: pointer; position: relative;
+    transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.card.flipped { transform: rotateY(180deg); }
+.card.matched { animation: pop 0.3s ease-in-out; opacity: 0.8; cursor: default; }
+
+.card-front, .card-back {
+    width: 100%; height: 100%; position: absolute; backface-visibility: hidden;
+    display: flex; align-items: center; justify-content: center; font-size: 35px;
+    border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.card-front { background: linear-gradient(135deg, #f6d365, #fda085); }
+.card-back { background: var(--card-bg); transform: rotateY(180deg); }
+
+@keyframes pop {
+    0% { transform: scale(1) rotateY(180deg); }
+    50% { transform: scale(1.2) rotateY(180deg); }
+    100% { transform: scale(1) rotateY(180deg); }
+}
+
+/* Stats */
+.stats { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; }
+.score-board { display: flex; justify-content: space-around; font-size: 1.5rem; font-weight: bold; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; }
+.active { color: #f1c40f; text-shadow: 0 0 10px #f1c40f; }
+.combo { color: #ff4757; transition: 0.3s; }
+
+/* Leaderboard */
+.leaderboard { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin: 20px 0; text-align: left; }
+.leaderboard ul { list-style: none; padding: 0; margin: 0; }
+.leaderboard li { padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.3); display: flex; justify-content: space-between; }
