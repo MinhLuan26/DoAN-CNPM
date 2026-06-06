@@ -19,7 +19,21 @@
             --card-front: linear-gradient(135deg, #1e293b, #334155);
             --card-back: linear-gradient(135deg, #3b82f6, #8b5cf6);
         }
+                    .card,
+            .card *,
+            .card-front,
+            .card-back {
+                user-select: none !important;
+                -webkit-user-select: none !important;
+                caret-color: transparent !important;
+                outline: none !important;
+            }
 
+            .card:focus,
+            .card-front:focus,
+            .card-back:focus {
+                outline: none !important;
+            }   
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark);
