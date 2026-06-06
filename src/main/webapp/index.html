@@ -354,25 +354,52 @@ function submitAuth() {
             const dataKey = 'MemGame_Data_' + u;
 
             if (action === 'register') {
-                if (localStorage.getItem(userKey)) msgBox.innerText = "Tài khoản đã tồn tại!";
-                else {
-                    localStorage.setItem(userKey, p);
-                    localStorage.setItem(dataKey, JSON.stringify(userData));
-                    msgBox.innerText = "Đăng ký thành công! Hãy Đăng nhập.";
-                }
-            } else if (action === 'login') {
-                if (localStorage.getItem(userKey) === p) {
-                    currentUser = u;
-                    let savedData = JSON.parse(localStorage.getItem(dataKey));
-                    // Đảm bảo dữ liệu cũ vẫn có các trường level/xp mới
-                    userData = { ...userData, ...savedData }; 
-                    
-                    document.getElementById('auth-screen').classList.add('hidden');
-                    document.getElementById('user-hud').classList.remove('hidden');
-                    document.getElementById('menu-screen').classList.remove('hidden');
-                    updateHUD(); loadShop(); loadLeaderboard();
-                } else msgBox.innerText = "Sai tài khoản hoặc mật khẩu!";
-            }
+
+    if (localStorage.getItem(userKey)) {
+        msgBox.innerText = "Tài khoản đã tồn tại. Hãy đăng nhập!";
+        return;
+    }
+
+    localStorage.setItem(userKey, p);
+    localStorage.setItem(dataKey, JSON.stringify(userData));
+
+    msgBox.innerText = "Đăng ký thành công! Hãy đăng nhập.";
+}
+
+else if (action === 'login') {
+
+    const savedPass = localStorage.getItem(userKey);
+
+    if (!savedPass) {
+        msgBox.innerText = "Tài khoản chưa được tạo. Vui lòng đăng ký trước!";
+        return;
+    }
+
+    if (savedPass !== p) {
+        msgBox.innerText = "Sai mật khẩu!";
+        return;
+    }
+
+    currentUser = u;
+
+    let savedData =
+        JSON.parse(localStorage.getItem(dataKey)) || userData;
+
+    userData = {
+        ...userData,
+        ...savedData
+    };
+
+    document.getElementById('auth-screen').classList.add('hidden');
+    document.getElementById('user-hud').classList.remove('hidden');
+    document.getElementById('menu-screen').classList.remove('hidden');
+
+    updateHUD();
+    loadShop();
+    loadLeaderboard();
+
+    msgBox.innerText = "";
+}
         }
 
         function updateHUD() {
