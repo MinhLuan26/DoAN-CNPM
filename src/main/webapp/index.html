@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memory Match - Ultimate Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
     <style>
         /* ================= CSS GIAO DIỆN (GIỮ NGUYÊN) ================= */
         :root {
@@ -20,14 +21,14 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Poppins', sans-serif; background-color: var(--bg-dark);
+            font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark);
             background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.2) 0px, transparent 50%),
                               radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.2) 0px, transparent 50%);
             color: var(--text-main); display: flex; justify-content: center; align-items: center;
             min-height: 100vh; padding: 20px; overflow-x: hidden;
         }
 
-        h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; letter-spacing: 1px; }
         #app { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 15px; }
         .hidden { display: none !important; }
 
@@ -93,6 +94,84 @@
         .card-front { background: var(--card-front); border: 2px solid rgba(255,255,255,0.1); }
         .card-front::after { content: '?'; color: rgba(255,255,255,0.15); font-family: 'Orbitron', sans-serif; }
         .card-back { background: var(--card-back); transform: rotateY(180deg); border: 2px solid rgba(255,255,255,0.3); }
+        .auth-layout {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    width: 900px !important;
+    max-width: 100% !important;
+    min-height: 560px !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.45) !important;
+}
+
+.auth-left {
+    background: linear-gradient(135deg, #68e6d0, #45cdbd) !important;
+    padding: 45px !important;
+    color: white !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center !important;
+}
+
+.auth-right {
+    background: #26364a !important;
+    padding: 55px 60px !important;
+    color: white !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+.auth-tabs {
+    display: flex !important;
+    gap: 10px !important;
+    justify-content: flex-end !important;
+    margin-bottom: 35px !important;
+}
+
+.auth-tabs button {
+    border: none !important;
+    background: rgba(255,255,255,0.08) !important;
+    color: rgba(255,255,255,0.7) !important;
+    padding: 8px 18px !important;
+    border-radius: 20px !important;
+    cursor: pointer !important;
+}
+
+.auth-tabs button.active {
+    background: #58dbc9 !important;
+    color: #203042 !important;
+}
+
+.auth-right input {
+    width: 100% !important;
+    max-width: none !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 0 !important;
+    padding: 14px 0 !important;
+    margin-bottom: 22px !important;
+    color: white !important;
+}
+
+.auth-submit {
+    width: 150px !important;
+    padding: 13px !important;
+    border: none !important;
+    border-radius: 25px !important;
+    background: #58dbc9 !important;
+    color: #203042 !important;
+    font-weight: 800 !important;
+    cursor: pointer !important;
+}
+
+.rocket-art {
+    font-size: 7rem !important;
+}
     </style>
 </head>
 <body>
@@ -107,15 +186,35 @@
             </div>
         </div>
 
-        <div id="auth-screen" class="panel">
-            <h2 class="panel-title">Hệ Thống Đăng Nhập</h2>
-            <input type="text" id="username" placeholder="Tên tài khoản" autocomplete="off">
-            <input type="password" id="password" placeholder="Mật khẩu">
-            <br>
-            <button onclick="authenticate('login')" class="btn btn-primary">Đăng nhập</button>
-            <button onclick="authenticate('register')" class="btn btn-success">Đăng ký</button>
-            <p id="auth-msg" style="margin-top: 15px; color: #fbbf24;"></p>
+       <div id="auth-screen" class="auth-layout">
+    <div class="auth-left">
+        <div class="auth-icon">🧠</div>
+        <h2>Memory Match</h2>
+        <p>Lật thẻ, ghi nhớ vị trí và chinh phục các màn chơi khó dần.</p>
+
+        <div class="rocket-art">🚀</div>
+
+        <div class="auth-dots">
+            <span></span><span></span><span></span><span></span>
         </div>
+    </div>
+
+    <div class="auth-right">
+        <div class="auth-tabs">
+            <button onclick="setAuthMode('login')" id="tab-login" class="active">Đăng nhập</button>
+            <button onclick="setAuthMode('register')" id="tab-register">Đăng ký</button>
+        </div>
+
+        <h2 id="auth-title">Đăng nhập</h2>
+
+        <input type="text" id="username" placeholder="Tên tài khoản" autocomplete="off">
+        <input type="password" id="password" placeholder="Mật khẩu">
+
+        <button onclick="submitAuth()" class="auth-submit" id="auth-submit-btn">Đăng nhập</button>
+
+        <p id="auth-msg"></p>
+    </div>
+</div>
 
         <div id="menu-screen" class="panel hidden">
             <div class="menu-layout">
@@ -224,7 +323,26 @@
         let currentUser = null;
         // Bổ sung Level, XP và Nhiệm vụ vào Data
         let userData = { coins: 0, themes: ['default'], currentTheme: 'default', level: 1, xp: 0, questDone: false };
-        
+        let authMode = 'login';
+
+function setAuthMode(mode) {
+    authMode = mode;
+
+    document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+    document.getElementById('tab-register').classList.toggle('active', mode === 'register');
+
+    document.getElementById('auth-title').innerText =
+        mode === 'login' ? 'Đăng nhập' : 'Đăng ký';
+
+    document.getElementById('auth-submit-btn').innerText =
+        mode === 'login' ? 'Đăng nhập' : 'Đăng ký';
+
+    document.getElementById('auth-msg').innerText = '';
+}
+
+function submitAuth() {
+    authenticate(authMode);
+}
         function authenticate(action) {
             const u = document.getElementById('username').value.trim();
             const p = document.getElementById('password').value.trim();

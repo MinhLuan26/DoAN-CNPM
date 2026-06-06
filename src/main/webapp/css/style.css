@@ -17,7 +17,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    font-family: 'Poppins', sans-serif;
+   font-family: 'Montserrat', sans-serif;
     background-color: var(--bg-dark);
     background-image: 
         radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.2) 0px, transparent 50%),
@@ -30,7 +30,7 @@ body {
     padding: 20px;
 }
 
-h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+h1, h2, h3 { font-family: 'Montserrat', sans-serif; letter-spacing: 1px; }
 
 #app { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
 
@@ -47,7 +47,7 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
 .lang-dropdown {
     background: var(--panel-bg); color: var(--text-main);
     border: 1px solid rgba(255,255,255,0.2); padding: 8px 15px;
-    border-radius: 8px; outline: none; cursor: pointer; font-family: 'Poppins', sans-serif;
+    border-radius: 8px; outline: none; cursor: pointer; font-family: 'Montserrat', sans-serif;
 }
 .panel {
     background: var(--panel-bg);
@@ -70,14 +70,14 @@ h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
 input {
     width: 100%; max-width: 350px; padding: 12px 20px; border-radius: 10px;
     border: 2px solid rgba(255, 255, 255, 0.1); background: rgba(0, 0, 0, 0.3);
-    color: white; font-size: 1rem; font-family: 'Poppins', sans-serif;
+    color: white; font-size: 1rem; font-family: 'Montserrat', sans-serif;
     transition: all 0.3s ease;
 }
 input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 .msg-text { margin-top: 15px; color: #fbbf24; font-weight: 600; min-height: 24px; }
 .btn {
     padding: 12px 25px; border: none; border-radius: 10px; font-size: 1rem;
-    font-weight: 600; font-family: 'Poppins', sans-serif; cursor: pointer;
+    font-weight: 600; font-family: 'Montserrat', sans-serif; cursor: pointer;
     transition: all 0.3s ease; color: white; text-transform: uppercase; letter-spacing: 1px;
 }
 .btn-primary { background: var(--primary); box-shadow: 0 4px 15px var(--primary-glow); }
@@ -115,7 +115,7 @@ input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px 
 .stats-board {
     display: flex; justify-content: space-between; align-items: center;
     background: rgba(0, 0, 0, 0.4); padding: 15px 25px; border-radius: 15px;
-    margin-bottom: 25px; font-family: 'Orbitron', sans-serif; font-size: 1.2rem;
+    margin-bottom: 25px; font-family: 'Montserrat', sans-serif; font-size: 1.2rem;
     border: 1px solid rgba(255,255,255,0.1);
 }
 .stat-item.timer { color: #fca5a5; font-weight: bold; }
@@ -161,7 +161,175 @@ input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px 
     font-size: 2.2rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 .card-front { background: var(--card-front); border: 2px solid rgba(255,255,255,0.1); }
-.card-front::after { content: '?'; color: rgba(255,255,255,0.15); font-family: 'Orbitron', sans-serif; font-size: 2.2rem; }
+.card-front::after { content: '?'; color: rgba(255,255,255,0.15); font-family: 'Montserrat', sans-serif; font-size: 2.2rem; }
 .card-back { background: var(--card-back); transform: rotateY(180deg); border: 2px solid rgba(255,255,255,0.3); }
 
 .game-actions { margin-top: 35px; text-align: center; }
+.auth-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    max-width: 900px;
+    min-height: 560px;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 25px 70px rgba(0,0,0,0.45);
+}
+
+.auth-left {
+    background: linear-gradient(135deg, #68e6d0, #45cdbd);
+    padding: 45px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+}
+
+.auth-left h2 {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.auth-left p {
+    max-width: 320px;
+    line-height: 1.6;
+    font-weight: 400;
+    opacity: 0.95;
+}
+
+.auth-icon {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    font-size: 1.5rem;
+}
+
+.rocket-art {
+    font-size: 7rem;
+    filter: drop-shadow(0 20px 25px rgba(0,0,0,0.15));
+    animation: floatRocket 2.8s ease-in-out infinite;
+}
+
+@keyframes floatRocket {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.auth-dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.auth-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.45);
+}
+
+.auth-dots span:first-child {
+    background: white;
+}
+
+.auth-right {
+    background: #26364a;
+    padding: 55px 60px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-tabs {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-bottom: 45px;
+}
+
+.auth-tabs button {
+    border: none;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.65);
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.auth-tabs button.active {
+    background: #58dbc9;
+    color: #203042;
+}
+
+.auth-right h2 {
+    font-size: 1.9rem;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.auth-right input {
+    width: 100%;
+    max-width: none;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    border-radius: 0;
+    padding: 14px 0;
+    margin-bottom: 22px;
+    color: white;
+    font-size: 0.95rem;
+}
+
+.auth-right input::placeholder {
+    color: rgba(255,255,255,0.45);
+}
+
+.auth-right input:focus {
+    outline: none;
+    border-color: #58dbc9;
+    box-shadow: none;
+}
+
+.auth-submit {
+    width: 150px;
+    padding: 13px;
+    border: none;
+    border-radius: 25px;
+    background: #58dbc9;
+    color: #203042;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 8px 25px rgba(88,219,201,0.35);
+}
+
+#auth-msg {
+    margin-top: 18px;
+    color: #fbbf24;
+    font-weight: 600;
+    min-height: 24px;
+}
+
+@media (max-width: 768px) {
+    .auth-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-left {
+        min-height: 260px;
+        padding: 30px;
+    }
+
+    .auth-right {
+        padding: 35px 28px;
+    }
+
+    .rocket-art {
+        font-size: 4.5rem;
+    }
+}
