@@ -1,29 +1,23 @@
 const CONFIG = {
     // Danh sách biểu tượng dùng để tạo cặp thẻ
     // Lưu ý: 20 emoji = tối đa 40 thẻ, vì mỗi emoji xuất hiện 2 lần
-    EMOJIS: [
-        '🍎','🍌','🍉','🍇','🍓',
-        '🍒','🍍','🥝','🥑','🌽',
-        '🥕','🍕','🍔','🍟','🌭',
-        '🍿','🍩','🍰','🧊','🚀'
-    ],
+	EMOJIS: [
+	        '🍎','🍌','🍉','🍇','🍓',
+	        '🍒','🍍','🥝','🥑','🌽',
+	        '🥕','🍕','🍔','🍟','🌭',
+	        '🍿','🍩','🍰','🧊','🚀',
+	        '🌟','🎈','🎨','🎸','🎮',
+	        '🐼','🦁','🦊','🐱','🐨'
+	],
 
-    // Cấu hình 10 màn chơi
-    // Số bên trái là tổng số thẻ
-    // cols: số cột của bàn chơi
-    // time: thời gian hoàn thành màn, tính bằng giây
-    DIFFICULTY_MAP: {
-        4:  { cols: 2, time: 30 },   // Màn 1: 2 cặp, rất dễ để làm quen
-        6:  { cols: 3, time: 40 },   // Màn 2: tăng nhẹ số cặp
-        8:  { cols: 4, time: 50 },   // Màn 3: bàn 4 cột, dễ nhìn
-        10: { cols: 5, time: 60 },   // Màn 4: bắt đầu cần nhớ vị trí tốt hơn
-        12: { cols: 4, time: 70 },   // Màn 5: nhiều cặp hơn
-        16: { cols: 4, time: 90 },   // Màn 6: dạng 4x4 quen thuộc
-        20: { cols: 5, time: 110 },  // Màn 7: 10 cặp, độ khó trung bình
-        24: { cols: 6, time: 130 },  // Màn 8: bàn lớn hơn
-        30: { cols: 6, time: 160 },  // Màn 9: khó, cần nhớ nhiều vị trí
-        40: { cols: 8, time: 210 }   // Màn 10: khó nhất, dùng đủ 20 emoji
-    },
+	    // Cấu hình dựa trên kích thước cạnh lưới X (2x2, 3x3, 4x4...)
+	DIFFICULTY_MAP: {
+	        2: { time: 30 },   // Lưới 2x2 (4 ô - 2 cặp)
+	        3: { time: 50 },   // Lưới 3x3 (9 ô - 4 cặp + 1 ô trống trung tâm)
+	        4: { time: 90 },   // Lưới 4x4 (16 ô - 8 cặp)
+	        5: { time: 140 },  // Lưới 5x5 (25 ô - 12 cặp + 1 ô trống trung tâm)
+	        6: { time: 180 }   // Lưới 6x6 (36 ô - 18 cặp)
+	},
 
     POINTS_PER_MATCH: 10,
 

@@ -7,8 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
     <style>
-        /* ================= CSS GIAO DIỆN (GIỮ NGUYÊN) ================= */
-        
+        /* ================= CSS GIAO DIỆN ================= */
         :root {
             --bg-dark: #0f172a; --panel-bg: rgba(30, 41, 59, 0.85);
             --primary: #3b82f6; --primary-glow: rgba(59, 130, 246, 0.5);
@@ -19,21 +18,11 @@
             --card-front: linear-gradient(135deg, #1e293b, #334155);
             --card-back: linear-gradient(135deg, #3b82f6, #8b5cf6);
         }
-                    .card,
-            .card *,
-            .card-front,
-            .card-back {
-                user-select: none !important;
-                -webkit-user-select: none !important;
-                caret-color: transparent !important;
-                outline: none !important;
-            }
-
-            .card:focus,
-            .card-front:focus,
-            .card-back:focus {
-                outline: none !important;
-            }   
+        .card, .card *, .card-front, .card-back {
+            user-select: none !important; -webkit-user-select: none !important;
+            caret-color: transparent !important; outline: none !important;
+        }
+        .card:focus, .card-front:focus, .card-back:focus { outline: none !important; }   
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Montserrat', sans-serif; background-color: var(--bg-dark);
@@ -52,7 +41,6 @@
         .user-hud { display: flex; gap: 15px; align-items: center; background: rgba(0,0,0,0.4); padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap;}
         .coin-display { color: #fbbf24; font-weight: bold; font-size: 1.1rem; }
 
-        /* Bổ sung CSS cho Level Bar & Pet */
         .level-bar { background: #334155; height: 10px; border-radius: 5px; width: 100px; overflow: hidden; display: inline-block; }
         .level-fill { background: var(--success); height: 100%; width: 0%; transition: width 0.5s; }
         .pet-btn { background: linear-gradient(45deg, #f59e0b, #ef4444); border: none; padding: 10px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; box-shadow: 0 0 10px rgba(245, 158, 11, 0.5); transition: 0.3s; margin-left: 10px; }
@@ -109,121 +97,22 @@
         .card-front { background: var(--card-front); border: 2px solid rgba(255,255,255,0.1); }
         .card-front::after { content: '?'; color: rgba(255,255,255,0.15); font-family: 'Orbitron', sans-serif; }
         .card-back { background: var(--card-back); transform: rotateY(180deg); border: 2px solid rgba(255,255,255,0.3); }
-        .auth-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr !important;
-    width: 900px !important;
-    max-width: 100% !important;
-    min-height: 560px !important;
-    border-radius: 18px !important;
-    overflow: hidden !important;
-    box-shadow: 0 25px 70px rgba(0,0,0,0.45) !important;
-}
-
-.auth-left {
-    background: linear-gradient(135deg, #68e6d0, #45cdbd) !important;
-    padding: 45px !important;
-    color: white !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    text-align: center !important;
-}
-
-.auth-right {
-    background: #26364a !important;
-    padding: 55px 60px !important;
-    color: white !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-}
-
-.auth-tabs {
-    display: flex !important;
-    gap: 10px !important;
-    justify-content: flex-end !important;
-    margin-bottom: 35px !important;
-}
-
-.auth-tabs button {
-    border: none !important;
-    background: rgba(255,255,255,0.08) !important;
-    color: rgba(255,255,255,0.7) !important;
-    padding: 8px 18px !important;
-    border-radius: 20px !important;
-    cursor: pointer !important;
-}
-
-.auth-tabs button.active {
-    background: #58dbc9 !important;
-    color: #203042 !important;
-}
-
-.auth-right input {
-    width: 100% !important;
-    max-width: none !important;
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 1px solid rgba(255,255,255,0.2) !important;
-    border-radius: 0 !important;
-    padding: 14px 0 !important;
-    margin-bottom: 22px !important;
-    color: white !important;
-}
-
-.auth-submit {
-    width: 150px !important;
-    padding: 13px !important;
-    border: none !important;
-    border-radius: 25px !important;
-    background: #58dbc9 !important;
-    color: #203042 !important;
-    font-weight: 800 !important;
-    cursor: pointer !important;
-}
-
-.rocket-art {   
-    font-size: 7rem !important;
-}
-.result-popup {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-.result-box {
-    width: 450px;
-    max-width: 90%;
-    background: #1e293b;
-    border-radius: 20px;
-    padding: 30px;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.15);
-    box-shadow: 0 0 40px rgba(59,130,246,0.4);
-}
-
-.result-box h2 {
-    margin-bottom: 20px;
-    color: #10b981;
-}
-
-.result-box p {
-    margin: 10px 0;
-    font-size: 1.1rem;
-}
-
-.result-actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 25px;
-}
+        
+        .auth-layout { display: grid; grid-template-columns: 1fr 1fr !important; width: 900px !important; max-width: 100% !important; min-height: 560px !important; border-radius: 18px !important; overflow: hidden !important; box-shadow: 0 25px 70px rgba(0,0,0,0.45) !important; }
+        .auth-left { background: linear-gradient(135deg, #68e6d0, #45cdbd) !important; padding: 45px !important; color: white !important; display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; text-align: center !important; }
+        .auth-right { background: #26364a !important; padding: 55px 60px !important; color: white !important; display: flex !important; flex-direction: column !important; justify-content: center !important; }
+        .auth-tabs { display: flex !important; gap: 10px !important; justify-content: flex-end !important; margin-bottom: 35px !important; }
+        .auth-tabs button { border: none !important; background: rgba(255,255,255,0.08) !important; color: rgba(255,255,255,0.7) !important; padding: 8px 18px !important; border-radius: 20px !important; cursor: pointer !important; }
+        .auth-tabs button.active { background: #58dbc9 !important; color: #203042 !important; }
+        .auth-right input { width: 100% !important; max-width: none !important; background: transparent !important; border: none !important; border-bottom: 1px solid rgba(255,255,255,0.2) !important; border-radius: 0 !important; padding: 14px 0 !important; margin-bottom: 22px !important; color: white !important; }
+        .auth-submit { width: 150px !important; padding: 13px !important; border: none !important; border-radius: 25px !important; background: #58dbc9 !important; color: #203042 !important; font-weight: 800 !important; cursor: pointer !important; }
+        .rocket-art { font-size: 7rem !important; }
+        
+        .result-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .result-box { width: 450px; max-width: 90%; background: #1e293b; border-radius: 20px; padding: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 0 40px rgba(59,130,246,0.4); }
+        .result-box h2 { margin-bottom: 20px; color: #10b981; }
+        .result-box p { margin: 10px 0; font-size: 1.1rem; }
+        .result-actions { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
     </style>
 </head>
 <body>
@@ -239,66 +128,48 @@
         </div>
 
        <div id="auth-screen" class="auth-layout">
-    <div class="auth-left">
-        <div class="auth-icon">🧠</div>
-        <h2>Memory Match</h2>
-        <p>Lật thẻ, ghi nhớ vị trí và chinh phục các màn chơi khó dần.</p>
-
-        <div class="rocket-art">🚀</div>
-
-        <div class="auth-dots">
-            <span></span><span></span><span></span><span></span>
+            <div class="auth-left">
+                <div class="auth-icon">🧠</div>
+                <h2>Memory Match</h2>
+                <p>Lật thẻ, ghi nhớ vị trí và chinh phục các màn chơi khó dần.</p>
+                <div class="rocket-art">🚀</div>
+            </div>
+            <div class="auth-right">
+                <div class="auth-tabs">
+                    <button onclick="setAuthMode('login')" id="tab-login" class="active">Đăng nhập</button>
+                    <button onclick="setAuthMode('register')" id="tab-register">Đăng ký</button>
+                </div>
+                <h2 id="auth-title">Đăng nhập</h2>
+                <input type="text" id="username" placeholder="Tên tài khoản" autocomplete="off">
+                <input type="password" id="password" placeholder="Mật khẩu">
+                <button onclick="submitAuth()" class="auth-submit" id="auth-submit-btn">Đăng nhập</button>
+                <p id="auth-msg"></p>
+            </div>
         </div>
-    </div>
-
-    <div class="auth-right">
-        <div class="auth-tabs">
-            <button onclick="setAuthMode('login')" id="tab-login" class="active">Đăng nhập</button>
-            <button onclick="setAuthMode('register')" id="tab-register">Đăng ký</button>
-        </div>
-
-        <h2 id="auth-title">Đăng nhập</h2>
-
-        <input type="text" id="username" placeholder="Tên tài khoản" autocomplete="off">
-        <input type="password" id="password" placeholder="Mật khẩu">
-
-        <button onclick="submitAuth()" class="auth-submit" id="auth-submit-btn">Đăng nhập</button>
-
-        <p id="auth-msg"></p>
-    </div>
-</div>
 
         <div id="menu-screen" class="panel hidden">
             <div class="menu-layout">
                 <div class="box">
                     <h3 class="panel-title" style="font-size: 1.4rem;">🎮 Bắt đầu trò chơi</h3>
                     <select id="difficulty">
-                        <option value="6">3x2 (3 cặp - Siêu dễ)</option>
-                        <option value="9">3x3 (9 thẻ - Đặc biệt)</option>
-                        <option value="12">4x3 (6 cặp - Dễ)</option>
-                        <option value="16">4x4 (8 cặp - Cơ bản)</option>
-                        <option value="20">5x4 (10 cặp - Trung bình)</option>
-                        <option value="30">6x5 (15 cặp - Khó)</option>
-                        <option value="36">6x6 (18 cặp - Thử thách)</option>
-                        <option value="48">8x6 (24 cặp - Chuyên gia)</option>
-                        <option value="64">8x8 (32 cặp - Huyền thoại)</option>
-                    </select>
+        				<option value="2">Lưới 2x2 (Khởi động - 4 ô)</option>
+				        <option value="3">Lưới 3x3 (Bình thường - 9 ô)</option>
+				        <option value="4">Lưới 4x4 (Thử thách - 16 ô)</option>
+				        <option value="5">Lưới 5x5 (Chuyên gia - 25 ô)</option>
+				        <option value="6">Lưới 6x6 (Huyền thoại - 36 ô)</option>
+    				</select>
                     <select id="mode">
                         <option value="1">1 Người chơi (Cày xu & Điểm)</option>
                         <option value="2">2 Người chơi (Đối kháng)</option>
                     </select>
-                    
                     <h4 style="margin-top: 15px; color: #cbd5e1;">Giao diện thẻ đang dùng:</h4>
                     <select id="theme-select" style="margin-top: 5px; background: #1e293b;"></select>
-
                     <button onclick="startGame()" class="btn btn-primary" style="width: 100%; margin-top: 10px; padding: 15px; font-size: 1.1rem;">🔥 VÀO GAME</button>
                     <button onclick="logout()" class="btn btn-danger" style="width: 100%; margin-top: 10px;">Đăng xuất</button>
                 </div>
-                
                 <div class="box">
                     <h3 class="panel-title" style="font-size: 1.4rem;">🛒 Cửa hàng Theme</h3>
                     <div id="shop-list"></div>
-                    
                     <div style="margin-top: 20px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.3);">
                         <h4 style="margin:0 0 10px 0; color: var(--success);">📜 Nhiệm vụ hàng ngày</h4>
                         <div id="quest-text">Thắng 1 ván (0/1) - Thưởng: 50 Xu</div>
@@ -310,20 +181,21 @@
                 <ul id="leaderboard-list"></ul>
             </div>
         </div>
-            <div id="result-popup" class="result-popup hidden">
-    <div class="result-box">
-        <h2 id="result-title">🎉 Chiến thắng!</h2>
-        <p id="result-score">🏆 Tổng điểm: 0</p>
-        <p id="result-coins">💰 Nhận được: 0 Xu</p>
-        <p id="result-xp">✨ Kinh nghiệm: +0 XP</p>
 
-        <div class="result-actions">
-    <button onclick="replayLevel()" class="btn btn-primary">Chơi lại</button>
-    <button onclick="nextLevel()" class="btn btn-success">Màn tiếp theo</button>
-    <button onclick="backToMenu()" class="btn btn-danger">Về menu</button>
-</div>
-    </div>
-</div>
+        <div id="result-popup" class="result-popup hidden">
+            <div class="result-box">
+                <h2 id="result-title">🎉 Chiến thắng!</h2>
+                <p id="result-score">🏆 Tổng điểm: 0</p>
+                <p id="result-coins">💰 Nhận được: 0 Xu</p>
+                <p id="result-xp">✨ Kinh nghiệm: +0 XP</p>
+                <div class="result-actions">
+                    <button onclick="replayLevel()" class="btn btn-primary">Chơi lại</button>
+                    <button onclick="nextLevel()" class="btn btn-success">Màn tiếp theo</button>
+                    <button onclick="backToMenu()" class="btn btn-danger">Về menu</button>
+                </div>
+            </div>
+        </div>
+
         <div id="game-screen" class="panel hidden">
             <div class="stats-board">
                 <div class="timer" id="timer-box">⏱: <span id="time-left">60</span>s</div>
@@ -334,15 +206,12 @@
                     <button id="pet-btn" class="pet-btn" onclick="usePet()" title="Gọi thú cưng (Tự lật 1 cặp) - Hồi chiêu 30s">🐶</button>
                 </div>
             </div>
-            
             <div class="power-ups">
                 <button id="btn-eye" class="power-btn" onclick="usePowerUp('eye')">👁️ Mắt Thần (1)</button>
                 <button id="btn-freeze" class="power-btn" onclick="usePowerUp('freeze')">❄️ Đóng Băng (1)</button>
                 <button id="btn-destroy" class="power-btn" onclick="usePowerUp('destroy')">💣 Phá Hủy (1)</button>
             </div>
-
             <div id="game-board"></div>
-            
             <button onclick="quitGame()" class="btn btn-danger" style="margin-top: 25px;">Đầu hàng / Thoát</button>
         </div>
     </div>
@@ -386,28 +255,20 @@
         };
 
         let currentUser = null;
-        // Bổ sung Level, XP và Nhiệm vụ vào Data
         let userData = { coins: 0, themes: ['default'], currentTheme: 'default', level: 1, xp: 0, questDone: false };
         let authMode = 'login';
 
-function setAuthMode(mode) {
-    authMode = mode;
+        function setAuthMode(mode) {
+            authMode = mode;
+            document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+            document.getElementById('tab-register').classList.toggle('active', mode === 'register');
+            document.getElementById('auth-title').innerText = mode === 'login' ? 'Đăng nhập' : 'Đăng ký';
+            document.getElementById('auth-submit-btn').innerText = mode === 'login' ? 'Đăng nhập' : 'Đăng ký';
+            document.getElementById('auth-msg').innerText = '';
+        }
 
-    document.getElementById('tab-login').classList.toggle('active', mode === 'login');
-    document.getElementById('tab-register').classList.toggle('active', mode === 'register');
-
-    document.getElementById('auth-title').innerText =
-        mode === 'login' ? 'Đăng nhập' : 'Đăng ký';
-
-    document.getElementById('auth-submit-btn').innerText =
-        mode === 'login' ? 'Đăng nhập' : 'Đăng ký';
-
-    document.getElementById('auth-msg').innerText = '';
-}
-
-function submitAuth() {
-    authenticate(authMode);
-}
+        function submitAuth() { authenticate(authMode); }
+        
         function authenticate(action) {
             const u = document.getElementById('username').value.trim();
             const p = document.getElementById('password').value.trim();
@@ -419,54 +280,34 @@ function submitAuth() {
             const dataKey = 'MemGame_Data_' + u;
 
             if (action === 'register') {
+                if (localStorage.getItem(userKey)) {
+                    msgBox.innerText = "Tài khoản đã tồn tại. Hãy đăng nhập!";
+                    return;
+                }
+                localStorage.setItem(userKey, p);
+                localStorage.setItem(dataKey, JSON.stringify(userData));
+                msgBox.innerText = "Đăng ký thành công! Hãy đăng nhập.";
+            } else if (action === 'login') {
+                const savedPass = localStorage.getItem(userKey);
+                if (!savedPass) {
+                    msgBox.innerText = "Tài khoản chưa được tạo. Vui lòng đăng ký trước!";
+                    return;
+                }
+                if (savedPass !== p) {
+                    msgBox.innerText = "Sai mật khẩu!";
+                    return;
+                }
+                currentUser = u;
+                let savedData = JSON.parse(localStorage.getItem(dataKey)) || userData;
+                userData = { ...userData, ...savedData };
 
-    if (localStorage.getItem(userKey)) {
-        msgBox.innerText = "Tài khoản đã tồn tại. Hãy đăng nhập!";
-        return;
-    }
+                document.getElementById('auth-screen').style.display = 'none';
+                document.getElementById('user-hud').classList.remove('hidden');
+                document.getElementById('menu-screen').classList.remove('hidden');
 
-    localStorage.setItem(userKey, p);
-    localStorage.setItem(dataKey, JSON.stringify(userData));
-
-    msgBox.innerText = "Đăng ký thành công! Hãy đăng nhập.";
-}
-
-else if (action === 'login') {
-
-    const savedPass = localStorage.getItem(userKey);
-
-    if (!savedPass) {
-        msgBox.innerText = "Tài khoản chưa được tạo. Vui lòng đăng ký trước!";
-        return;
-    }
-
-    if (savedPass !== p) {
-        msgBox.innerText = "Sai mật khẩu!";
-        return;
-    }
-
-    currentUser = u;
-
-    let savedData =
-        JSON.parse(localStorage.getItem(dataKey)) || userData;
-
-    userData = {
-        ...userData,
-        ...savedData
-    };
-
-   document.getElementById('auth-screen').style.display = 'none';
-
-document.getElementById('user-hud').classList.remove('hidden');
-
-document.getElementById('menu-screen').classList.remove('hidden');
-
-    updateHUD();
-    loadShop();
-    loadLeaderboard();
-
-    msgBox.innerText = "";
-}
+                updateHUD(); loadShop(); loadLeaderboard();
+                msgBox.innerText = "";
+            }
         }
 
         function updateHUD() {
@@ -475,7 +316,6 @@ document.getElementById('menu-screen').classList.remove('hidden');
             document.getElementById('hud-level').innerText = userData.level;
             document.getElementById('hud-xp').style.width = `${(userData.xp % 100)}%`;
             document.getElementById('quest-text').innerText = userData.questDone ? "✅ Đã hoàn thành nhiệm vụ!" : "Thắng 1 ván (0/1) - Thưởng: 50 Xu";
-            
             localStorage.setItem('MemGame_Data_' + currentUser, JSON.stringify(userData));
         }
 
@@ -518,9 +358,6 @@ document.getElementById('menu-screen').classList.remove('hidden');
                 userData.coins -= price;
                 userData.themes.push(key);
                 updateHUD(); loadShop();
-                console.log(`Mua thành công bộ: ${THEMES_DATA[key].name}!`);
-            } else {
-                console.log("Không đủ Xu! Hãy chơi game để cày thêm.");
             }
         }
         
@@ -530,44 +367,62 @@ document.getElementById('menu-screen').classList.remove('hidden');
         let isMultiplayer, currentPlayer, scores = [0, 0];
         let powerUps = { eye: 1, freeze: 1, destroy: 1 };
         let isFrozen = false, petReady = true;
-        updatePowerUpUI();
+        
         function startGame() {
-            const difficulty = parseInt(document.getElementById('difficulty').value);
+            const size = parseInt(document.getElementById('difficulty').value);
             isMultiplayer = document.getElementById('mode').value === '2';
             userData.currentTheme = document.getElementById('theme-select').value;
             
             document.getElementById('menu-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
             
-            if (difficulty <= 9) timeLeft = 45; else if (difficulty <= 16) timeLeft = 90; else if (difficulty <= 24) timeLeft = 130; else timeLeft = 210;
+            if (size === 2) timeLeft = 30; 
+            else if (size === 3) timeLeft = 50; 
+            else if (size === 4) timeLeft = 90; 
+            else if (size === 5) timeLeft = 140; 
+            else if (size === 6) timeLeft = 180;
+            else timeLeft = 100;
 
             scores = [0, 0]; currentPlayer = 1; comboCount = 1;
+            powerUps = { eye: 1, freeze: 1, destroy: 1 }; // Reset PowerUps
             updatePowerUpUI();
             petReady = true; document.getElementById('pet-btn').disabled = false;
             
-            updateGameUI(); setupBoard(difficulty); startTimer();
+            updateGameUI(); 
+            setupBoard(size); // Truyền KÍCH THƯỚC CẠNH VÀO ĐÂY
+            startTimer();
         }
 
-        function setupBoard(numCards) {
+        // TẠO BÀN CHƠI LƯỚI VUÔNG CHUẨN
+        function setupBoard(size) {
             const board = document.getElementById('game-board');
             board.innerHTML = '';
-            let cols = Math.ceil(Math.sqrt(numCards)); 
-            board.style.gridTemplateColumns = `repeat(${cols}, 70px)`;
             
-            let totalToRender = numCards % 2 === 0 ? numCards : numCards - 1;
-            let pairsNeeded = totalToRender / 2;
-            let hasSpecials = numCards >= 16;
+            // Xây dựng ma trận lưới
+            board.style.display = 'grid';
+            board.style.gridTemplateColumns = `repeat(${size}, 70px)`;
+            board.style.gridTemplateRows = `repeat(${size}, 70px)`;
+            board.style.gap = '10px';
+            board.style.margin = '20px auto';
+            board.style.justifyContent = 'center';
+
+            let totalCards = size * size; // Tổng số ô vuông. Vd 5x5 = 25 ô
+            let pairsNeeded = Math.floor(totalCards / 2);
+            let hasSpecials = totalCards >= 16;
             
-            // Nhường chỗ cho 2 thẻ đặc biệt nếu lưới đủ lớn
+            // Nhường chỗ cho 2 thẻ đặc biệt
             if (hasSpecials) pairsNeeded -= 1; 
             
-            let gameEmojis = THEMES_DATA[userData.currentTheme].emojis.slice(0, pairsNeeded);
+            let emojisPool = THEMES_DATA[userData.currentTheme].emojis;
+            let gameEmojis = [];
+            for (let i = 0; i < pairsNeeded; i++) {
+                gameEmojis.push(emojisPool[i % emojisPool.length]);
+            }
+            
             let deck = [...gameEmojis, ...gameEmojis];
             
-            // Nạp Thẻ Đặc Biệt
             if (hasSpecials) deck.push('💣', '⏳');
-            // Nạp Thẻ Lẻ (Sao)
-            if (numCards % 2 !== 0) deck.push('⭐'); 
+            if (totalCards % 2 !== 0) deck.push('⭐'); 
             
             deck.sort(() => Math.random() - 0.5);
 
@@ -588,7 +443,6 @@ document.getElementById('menu-screen').classList.remove('hidden');
             playSound('flip');
             this.classList.add('flipped');
 
-            // Xử lý Thẻ Đặc Biệt lật phát ăn luôn
             if (this.dataset.val === '💣') {
                 timeLeft -= 5; this.classList.add('matched', 'special-bom'); 
                 checkWinSpecial(); return;
@@ -616,14 +470,10 @@ document.getElementById('menu-screen').classList.remove('hidden');
                 
                 scores[currentPlayer - 1] += 10 * comboCount;
                 comboCount++;
-                updateGameUI();
-                resetBoard();
-                checkWinSpecial();
+                updateGameUI(); resetBoard(); checkWinSpecial();
             } else {
                 playSound('wrong');
-                comboCount = 1;
-                lockBoard = true;
-                updateGameUI();
+                comboCount = 1; lockBoard = true; updateGameUI();
                 setTimeout(() => {
                     firstCard.classList.remove('flipped'); secondCard.classList.remove('flipped');
                     if (isMultiplayer) currentPlayer = currentPlayer === 1 ? 2 : 1;
@@ -632,7 +482,6 @@ document.getElementById('menu-screen').classList.remove('hidden');
             }
         }
         
-        // Tối ưu thuật toán check win thay thế hoàn toàn matchesFound cũ
         function checkWinSpecial() {
             let matchedCards = document.querySelectorAll('.card.matched').length;
             let totalCards = document.querySelectorAll('.card').length;
@@ -658,13 +507,11 @@ document.getElementById('menu-screen').classList.remove('hidden');
             document.getElementById('btn-destroy').disabled = powerUps.destroy <= 0;
         }
 
-        // Kỹ năng Thú cưng
         function usePet() {
             if(!petReady || lockBoard) return;
             playSound('powerup');
             petReady = false; document.getElementById('pet-btn').disabled = true;
             
-            // Tìm 1 cặp thường chưa lật
             let unflipped = Array.from(document.querySelectorAll('.card:not(.matched):not(.flipped)'))
                                  .filter(c => !['💣', '⏳', '⭐'].includes(c.dataset.val));
             if(unflipped.length >= 2) {
@@ -672,90 +519,48 @@ document.getElementById('menu-screen').classList.remove('hidden');
                 let pair = unflipped.filter(c => c.dataset.val === target).slice(0, 2);
                 pair.forEach(c => { c.classList.add('flipped', 'matched'); c.removeEventListener('click', flipCard); });
                 scores[currentPlayer - 1] += 10 * comboCount;
-                updateGameUI();
-                checkWinSpecial();
+                updateGameUI(); checkWinSpecial();
             }
             
-            // Hồi chiêu 30s
             setTimeout(() => { 
                 petReady = true; 
                 if(document.getElementById('pet-btn')) document.getElementById('pet-btn').disabled = false; 
             }, 30000);
         }
-   function updatePowerUpUI() {
-    document.getElementById('btn-eye').innerText =
-        `👁️ Mắt Thần (${powerUps.eye})`;
 
-    document.getElementById('btn-freeze').innerText =
-        `❄️ Đóng Băng (${powerUps.freeze})`;
+        function updatePowerUpUI() {
+            document.getElementById('btn-eye').innerText = `👁️ Mắt Thần (${powerUps.eye})`;
+            document.getElementById('btn-freeze').innerText = `❄️ Đóng Băng (${powerUps.freeze})`;
+            document.getElementById('btn-destroy').innerText = `💣 Phá Hủy (${powerUps.destroy})`;
+        }
 
-    document.getElementById('btn-destroy').innerText =
-        `💣 Phá Hủy (${powerUps.destroy})`;
-}
+        function usePowerUp(type) {
+            if (lockBoard && type !== 'freeze') return;
 
-function usePowerUp(type) {
-    if (lockBoard && type !== 'freeze') return;
-
-    if (type === 'eye' && powerUps.eye > 0) {
-        playSound('powerup');
-
-        powerUps.eye--;
-        updatePowerUpUI();
-        updateGameUI();
-
-        lockBoard = true;
-
-        let hiddenCards = document.querySelectorAll('.card:not(.matched):not(.flipped)');
-        hiddenCards.forEach(c => c.classList.add('flipped'));
-
-        setTimeout(() => {
-            hiddenCards.forEach(c => c.classList.remove('flipped'));
-            lockBoard = false;
-        }, 2000);
-    }
-
-    else if (type === 'freeze' && powerUps.freeze > 0) {
-        playSound('powerup');
-
-        powerUps.freeze--;
-        updatePowerUpUI();
-        updateGameUI();
-
-        isFrozen = true;
-        document.getElementById('timer-box').style.color = '#00f2fe';
-
-        setTimeout(() => {
-            isFrozen = false;
-            document.getElementById('timer-box').style.color = '#fca5a5';
-        }, 5000);
-    }
-
-    else if (type === 'destroy' && powerUps.destroy > 0) {
-        playSound('powerup');
-
-        powerUps.destroy--;
-        updatePowerUpUI();
-        updateGameUI();
-
-        let unflipped = Array.from(document.querySelectorAll('.card:not(.matched)'))
-            .filter(c => !['💣', '⏳', '⭐'].includes(c.dataset.val));
-
-        if (unflipped.length < 2) return;
-
-        let targetVal = unflipped[0].dataset.val;
-        let pair = unflipped.filter(c => c.dataset.val === targetVal);
-
-        pair.forEach(c => {
-            c.classList.add('flipped', 'matched');
-            c.removeEventListener('click', flipCard);
-        });
-
-        scores[currentPlayer - 1] += 10 * comboCount;
-
-        updateGameUI();
-        checkWinSpecial();
-    }
-}
+            if (type === 'eye' && powerUps.eye > 0) {
+                playSound('powerup'); powerUps.eye--; updatePowerUpUI(); updateGameUI();
+                lockBoard = true;
+                let hiddenCards = document.querySelectorAll('.card:not(.matched):not(.flipped)');
+                hiddenCards.forEach(c => c.classList.add('flipped'));
+                setTimeout(() => { hiddenCards.forEach(c => c.classList.remove('flipped')); lockBoard = false; }, 2000);
+            }
+            else if (type === 'freeze' && powerUps.freeze > 0) {
+                playSound('powerup'); powerUps.freeze--; updatePowerUpUI(); updateGameUI();
+                isFrozen = true; document.getElementById('timer-box').style.color = '#00f2fe';
+                setTimeout(() => { isFrozen = false; document.getElementById('timer-box').style.color = '#fca5a5'; }, 5000);
+            }
+            else if (type === 'destroy' && powerUps.destroy > 0) {
+                playSound('powerup'); powerUps.destroy--; updatePowerUpUI(); updateGameUI();
+                let unflipped = Array.from(document.querySelectorAll('.card:not(.matched)'))
+                                     .filter(c => !['💣', '⏳', '⭐'].includes(c.dataset.val));
+                if (unflipped.length < 2) return;
+                let targetVal = unflipped[0].dataset.val;
+                let pair = unflipped.filter(c => c.dataset.val === targetVal);
+                pair.forEach(c => { c.classList.add('flipped', 'matched'); c.removeEventListener('click', flipCard); });
+                scores[currentPlayer - 1] += 10 * comboCount;
+                updateGameUI(); checkWinSpecial();
+            }
+        }
 
         function startTimer() {
             document.getElementById('time-left').innerText = timeLeft;
@@ -763,80 +568,51 @@ function usePowerUp(type) {
             timer = setInterval(() => {
                 if(!isFrozen) timeLeft--;
                 document.getElementById('time-left').innerText = timeLeft;
-                if (timeLeft <= 0) { clearInterval(timer); lockBoard = true; console.log("Hết giờ! Bạn đã thua."); quitGame(); }
+                if (timeLeft <= 0) { clearInterval(timer); lockBoard = true; quitGame(); }
             }, 1000);
         }
+
         function showResultPopup(title, score, coins, xp) {
-    document.getElementById('result-title').innerText = title;
-    document.getElementById('result-score').innerText = `🏆 Tổng điểm: ${score}`;
-    document.getElementById('result-coins').innerText = `💰 Nhận được: ${coins} Xu`;
-    document.getElementById('result-xp').innerText = `✨ Kinh nghiệm: +${xp} XP`;
+            document.getElementById('result-title').innerText = title;
+            document.getElementById('result-score').innerText = `🏆 Tổng điểm: ${score}`;
+            document.getElementById('result-coins').innerText = `💰 Nhận được: ${coins} Xu`;
+            document.getElementById('result-xp').innerText = `✨ Kinh nghiệm: +${xp} XP`;
+            document.getElementById('result-popup').classList.remove('hidden');
+        }
 
-    document.getElementById('result-popup').classList.remove('hidden');
-}
-        function hideResultPopup() {
-    document.getElementById('result-popup').classList.add('hidden');
-            }
+        function hideResultPopup() { document.getElementById('result-popup').classList.add('hidden'); }
+        function replayLevel() { hideResultPopup(); startGame(); }
+        function nextLevel() {
+            hideResultPopup();
+            const difficultySelect = document.getElementById('difficulty');
+            if (difficultySelect.selectedIndex < difficultySelect.options.length - 1) {
+                difficultySelect.selectedIndex++; startGame();
+            } else { backToMenu(); }
+        }
+        function backToMenu() { hideResultPopup(); quitGame(); }
 
-            function replayLevel() {
-    hideResultPopup();
-    startGame();
-}
-
-function nextLevel() {
-    hideResultPopup();
-
-    const difficultySelect = document.getElementById('difficulty');
-    const currentIndex = difficultySelect.selectedIndex;
-
-    if (currentIndex < difficultySelect.options.length - 1) {
-        difficultySelect.selectedIndex = currentIndex + 1;
-        startGame();
-    } else {
-        backToMenu();
-    }
-}
-
-                function backToMenu() {
-                    hideResultPopup();
-                    quitGame();
-                }
         function declareWinner() {
             if (!isMultiplayer) {
                 const finalScore = scores[0] + timeLeft;
                 const coinsEarned = Math.floor(finalScore / 2);
-                const xpEarned = 20 * comboCount; // Nhận EXP dựa trên Combo
+                const xpEarned = 20 * comboCount; 
                 
                 userData.coins += coinsEarned;
                 userData.xp += xpEarned;
-                powerUps.eye++;
-powerUps.freeze++;
-powerUps.destroy++;
+                powerUps.eye++; powerUps.freeze++; powerUps.destroy++;
+                updatePowerUpUI();
 
-updatePowerUpUI();
-                // Thuật toán thăng cấp
                 if (userData.xp >= 100) {
                     let levelsGained = Math.floor(userData.xp / 100);
                     userData.level += levelsGained;
                     userData.xp = userData.xp % 100;
-                    console.log(`🎉 Chúc mừng! Bạn đã thăng cấp lên Level ${userData.level}`);
                 }
                 
-                // Hoàn thành nhiệm vụ
-                if (!userData.questDone) {
-                    userData.questDone = true;
-                    userData.coins += 50;
-                    console.log("✅ Hoàn thành nhiệm vụ ngày: Thưởng 50 Xu!");
-                }
+                if (!userData.questDone) { userData.questDone = true; userData.coins += 50; }
                 
                 updateHUD(); saveLeaderboard(currentUser, finalScore);
                 showResultPopup("🎉 Chiến thắng!", finalScore, coinsEarned, xpEarned);
-            } else {
-                if (scores[0] > scores[1]) console.log("Người chơi 1 Thắng!");
-                     console.log("Người chơi 2 Thắng!");
-                    console.log("Hòa nhau!");
             }
-            
         }
 
         function quitGame() {

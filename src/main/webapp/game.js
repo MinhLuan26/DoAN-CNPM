@@ -13,7 +13,10 @@ const Game = {
     comboTimer: null,
 
     init: () => {
-        const diffConfig = CONFIG.DIFFICULTY_MAP[AppState.difficulty];
+        const size = parseInt(AppState.difficulty) || 4; // Lấy kích thước lưới, mặc định là 4 nếu lỗi
+        // Lấy config thời gian tương ứng với size (VD: size 6 lấy config của màn 6x6)
+        const diffConfig = CONFIG.DIFFICULTY_MAP[size] || { time: 180 };
+        
         Game.timeLeft = diffConfig.time;
         Game.matchesFound = 0;
         Game.scores = [0, 0];
@@ -21,27 +24,57 @@ const Game = {
         Game.comboCount = 1;
         Game.resetBoard();
         
-        Game.renderBoard(AppState.difficulty, diffConfig.cols);
+        // Truyền cạnh của lưới (size) vào hàm render
+        Game.renderBoard(size);
         Game.updateUI();
         Game.startTimer();
     },
 
-    renderBoard: (numCards, cols) => {
+    renderBoard: (size) => {
         const board = document.getElementById('game-board');
         board.innerHTML = '';
-        board.style.gridTemplateColumns = `repeat(${cols}, 70px)`;
+        
+        // Tự động chia cột dựa trên kích thước lưới
+        board.style.gridTemplateColumns = `repeat(${size}, 70px)`;
 
-        let gameEmojis = CONFIG.EMOJIS.slice(0, numCards / 2);
+        const totalCells = size * size;
+        const numPairs = Math.floor(totalCells / 2); // Tổng số cặp thẻ cần tạo
+
+        // Mẹo an toàn: Lặp lại mảng EMOJIS nếu số lượng cặp bài cần thiết lớn hơn kho emoji có trong config.
+        // Giúp màn 6x6 (cần 18 cặp) không bị lỗi thẻ trắng nếu config chỉ khai báo 10 emoji.
+        let gameEmojis = [];
+        for (let i = 0; i < numPairs; i++) {
+            gameEmojis.push(CONFIG.EMOJIS[i % CONFIG.EMOJIS.length]);
+        }
+        
         let deck = [...gameEmojis, ...gameEmojis].sort(() => Math.random() - 0.5);
 
-        deck.forEach(emoji => {
+        // Tìm vị trí ô trung tâm nếu tổng số ô là lẻ (VD: lưới 3x3, 5x5)
+        const centerIndex = (totalCells % 2 !== 0) ? Math.floor(totalCells / 2) : -1;
+        let deckIdx = 0;
+
+        for (let i = 0; i < totalCells; i++) {
             const card = document.createElement('div');
-            card.classList.add('card');
-            card.dataset.val = emoji;
-            card.innerHTML = `<div class="card-front"></div><div class="card-back">${emoji}</div>`;
-            card.addEventListener('click', Game.flipCard);
+            
+            if (i === centerIndex) {
+                // Biến ô chính giữa thành ô trang trí
+                card.classList.add('card');
+                card.style.pointerEvents = 'none';
+                card.style.opacity = '0.4';
+                card.innerHTML = `
+                    <div class="card-front" style="background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2); box-shadow: none;"></div>
+                    <div class="card-back" style="font-size: 20px;">⭐</div>
+                `;
+            } else {
+                // Các ô thẻ bài bình thường
+                let emoji = deck[deckIdx++];
+                card.classList.add('card');
+                card.dataset.val = emoji; 
+                card.innerHTML = `<div class="card-front"></div><div class="card-back">${emoji}</div>`;
+                card.addEventListener('click', Game.flipCard);
+            }
             board.appendChild(card);
-        });
+        }
     },
 
     flipCard: function() {
@@ -73,7 +106,7 @@ const Game = {
         Game.secondCard.classList.add('matched');
         
         // Tính điểm và Combo
-        let points = CONFIG.POINTS_PER_MATCH * Game.comboCount;
+        let points = (CONFIG.POINTS_PER_MATCH || 10) * Game.comboCount;
         Game.scores[Game.currentPlayer - 1] += points;
         Game.matchesFound++;
         
@@ -83,12 +116,16 @@ const Game = {
         Game.comboTimer = setTimeout(() => {
             Game.comboCount = 1;
             Game.updateUI();
-        }, CONFIG.COMBO_TIMEOUT);
+        }, CONFIG.COMBO_TIMEOUT || 3000);
 
         Game.resetBoard();
         Game.updateUI();
 
-        if (Game.matchesFound === AppState.difficulty / 2) {
+        // Kiểm tra điều kiện thắng dựa trên số cặp bài trên lưới thực tế
+        const size = parseInt(AppState.difficulty) || 4;
+        const totalPairsNeeded = Math.floor((size * size) / 2);
+        
+        if (Game.matchesFound === totalPairsNeeded) {
             Game.endGame(true);
         }
     },
@@ -147,13 +184,13 @@ const Game = {
                 alert("Hết giờ! Bạn đã thua.");
             } else if (!AppState.isMultiplayer) {
                 alert(`Chiến thắng! Tổng điểm: ${Game.scores[0]}`);
-                Auth.saveScore(Game.scores[0]);
+                if(typeof Auth !== 'undefined' && Auth.saveScore) Auth.saveScore(Game.scores[0]);
             } else {
                 let msg = Game.scores[0] > Game.scores[1] ? "P1 Thắng!" : 
                           (Game.scores[1] > Game.scores[0] ? "P2 Thắng!" : "Hòa!");
                 alert(`Trận đấu kết thúc!\n${msg}`);
             }
-            document.getElementById('btn-quit').click(); // Trigger quit
+            document.getElementById('btn-quit').click(); // Trở về menu
         }, 500);
     }
 };

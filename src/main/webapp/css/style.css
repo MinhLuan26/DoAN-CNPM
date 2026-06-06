@@ -128,9 +128,13 @@ input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 15px 
 }
 
 #game-board {
-    display: grid; gap: 12px; justify-content: center;
-    perspective: 1000px; margin: 0 auto;
-}
+    display: grid;
+    gap: 10px;
+    justify-content: center;
+    align-content: center;
+    margin: 20px auto;
+    perspective: 1000px;
+    max-width: fit-content;
 .card {
     width: 70px; height: 70px; cursor: pointer; position: relative;
     transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
