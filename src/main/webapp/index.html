@@ -95,7 +95,7 @@
         .card-front::after { content: '?'; color: rgba(255,255,255,0.15); font-family: 'Orbitron', sans-serif; }
         .card-back { background: var(--card-back); transform: rotateY(180deg); border: 2px solid rgba(255,255,255,0.3); }
         .auth-layout {
-    display: grid !important;
+    display: grid;
     grid-template-columns: 1fr 1fr !important;
     width: 900px !important;
     max-width: 100% !important;
@@ -169,8 +169,45 @@
     cursor: pointer !important;
 }
 
-.rocket-art {
+.rocket-art {   
     font-size: 7rem !important;
+}
+.result-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.result-box {
+    width: 450px;
+    max-width: 90%;
+    background: #1e293b;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 0 40px rgba(59,130,246,0.4);
+}
+
+.result-box h2 {
+    margin-bottom: 20px;
+    color: #10b981;
+}
+
+.result-box p {
+    margin: 10px 0;
+    font-size: 1.1rem;
+}
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
 }
     </style>
 </head>
@@ -258,7 +295,20 @@
                 <ul id="leaderboard-list"></ul>
             </div>
         </div>
+            <div id="result-popup" class="result-popup hidden">
+    <div class="result-box">
+        <h2 id="result-title">🎉 Chiến thắng!</h2>
+        <p id="result-score">🏆 Tổng điểm: 0</p>
+        <p id="result-coins">💰 Nhận được: 0 Xu</p>
+        <p id="result-xp">✨ Kinh nghiệm: +0 XP</p>
 
+        <div class="result-actions">
+    <button onclick="replayLevel()" class="btn btn-primary">Chơi lại</button>
+    <button onclick="nextLevel()" class="btn btn-success">Màn tiếp theo</button>
+    <button onclick="backToMenu()" class="btn btn-danger">Về menu</button>
+</div>
+    </div>
+</div>
         <div id="game-screen" class="panel hidden">
             <div class="stats-board">
                 <div class="timer" id="timer-box">⏱: <span id="time-left">60</span>s</div>
@@ -390,9 +440,11 @@ else if (action === 'login') {
         ...savedData
     };
 
-    document.getElementById('auth-screen').classList.add('hidden');
-    document.getElementById('user-hud').classList.remove('hidden');
-    document.getElementById('menu-screen').classList.remove('hidden');
+   document.getElementById('auth-screen').style.display = 'none';
+
+document.getElementById('user-hud').classList.remove('hidden');
+
+document.getElementById('menu-screen').classList.remove('hidden');
 
     updateHUD();
     loadShop();
@@ -414,7 +466,7 @@ else if (action === 'login') {
 
         function logout() {
             currentUser = null;
-            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('auth-screen').style.display = 'grid';
             document.getElementById('menu-screen').classList.add('hidden');
             document.getElementById('user-hud').classList.add('hidden');
             document.getElementById('username').value = ''; document.getElementById('password').value = '';
@@ -451,9 +503,9 @@ else if (action === 'login') {
                 userData.coins -= price;
                 userData.themes.push(key);
                 updateHUD(); loadShop();
-                alert(`Mua thành công bộ: ${THEMES_DATA[key].name}!`);
+                console.log(`Mua thành công bộ: ${THEMES_DATA[key].name}!`);
             } else {
-                alert("Không đủ Xu! Hãy chơi game để cày thêm.");
+                console.log("Không đủ Xu! Hãy chơi game để cày thêm.");
             }
         }
         
@@ -652,10 +704,44 @@ else if (action === 'login') {
             timer = setInterval(() => {
                 if(!isFrozen) timeLeft--;
                 document.getElementById('time-left').innerText = timeLeft;
-                if (timeLeft <= 0) { clearInterval(timer); lockBoard = true; alert("Hết giờ! Bạn đã thua."); quitGame(); }
+                if (timeLeft <= 0) { clearInterval(timer); lockBoard = true; console.log("Hết giờ! Bạn đã thua."); quitGame(); }
             }, 1000);
         }
+        function showResultPopup(title, score, coins, xp) {
+    document.getElementById('result-title').innerText = title;
+    document.getElementById('result-score').innerText = `🏆 Tổng điểm: ${score}`;
+    document.getElementById('result-coins').innerText = `💰 Nhận được: ${coins} Xu`;
+    document.getElementById('result-xp').innerText = `✨ Kinh nghiệm: +${xp} XP`;
 
+    document.getElementById('result-popup').classList.remove('hidden');
+}
+        function hideResultPopup() {
+    document.getElementById('result-popup').classList.add('hidden');
+            }
+
+            function replayLevel() {
+    hideResultPopup();
+    startGame();
+}
+
+function nextLevel() {
+    hideResultPopup();
+
+    const difficultySelect = document.getElementById('difficulty');
+    const currentIndex = difficultySelect.selectedIndex;
+
+    if (currentIndex < difficultySelect.options.length - 1) {
+        difficultySelect.selectedIndex = currentIndex + 1;
+        startGame();
+    } else {
+        backToMenu();
+    }
+}
+
+                function backToMenu() {
+                    hideResultPopup();
+                    quitGame();
+                }
         function declareWinner() {
             if (!isMultiplayer) {
                 const finalScore = scores[0] + timeLeft;
@@ -670,24 +756,24 @@ else if (action === 'login') {
                     let levelsGained = Math.floor(userData.xp / 100);
                     userData.level += levelsGained;
                     userData.xp = userData.xp % 100;
-                    alert(`🎉 Chúc mừng! Bạn đã thăng cấp lên Level ${userData.level}`);
+                    console.log(`🎉 Chúc mừng! Bạn đã thăng cấp lên Level ${userData.level}`);
                 }
                 
                 // Hoàn thành nhiệm vụ
                 if (!userData.questDone) {
                     userData.questDone = true;
                     userData.coins += 50;
-                    alert("✅ Hoàn thành nhiệm vụ ngày: Thưởng 50 Xu!");
+                    console.log("✅ Hoàn thành nhiệm vụ ngày: Thưởng 50 Xu!");
                 }
                 
                 updateHUD(); saveLeaderboard(currentUser, finalScore);
-                alert(`Bạn đã thắng!\n🏆 Tổng điểm: ${finalScore}\n💰 Nhận được: ${coinsEarned} Xu\n✨ Kinh nghiệm: +${xpEarned} XP`);
+                showResultPopup("🎉 Chiến thắng!", finalScore, coinsEarned, xpEarned);
             } else {
-                if (scores[0] > scores[1]) alert("Người chơi 1 Thắng!");
-                else if (scores[1] > scores[0]) alert("Người chơi 2 Thắng!");
-                else alert("Hòa nhau!");
+                if (scores[0] > scores[1]) console.log("Người chơi 1 Thắng!");
+                     console.log("Người chơi 2 Thắng!");
+                    console.log("Hòa nhau!");
             }
-            quitGame();
+            
         }
 
         function quitGame() {
