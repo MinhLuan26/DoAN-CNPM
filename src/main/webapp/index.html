@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="style.css">
     <style>
         /* ================= CSS GIAO DIỆN (GIỮ NGUYÊN) ================= */
+        
         :root {
             --bg-dark: #0f172a; --panel-bg: rgba(30, 41, 59, 0.85);
             --primary: #3b82f6; --primary-glow: rgba(59, 130, 246, 0.5);
@@ -515,7 +516,7 @@ document.getElementById('menu-screen').classList.remove('hidden');
         let isMultiplayer, currentPlayer, scores = [0, 0];
         let powerUps = { eye: 1, freeze: 1, destroy: 1 };
         let isFrozen = false, petReady = true;
-
+        updatePowerUpUI();
         function startGame() {
             const difficulty = parseInt(document.getElementById('difficulty').value);
             isMultiplayer = document.getElementById('mode').value === '2';
@@ -527,7 +528,7 @@ document.getElementById('menu-screen').classList.remove('hidden');
             if (difficulty <= 9) timeLeft = 45; else if (difficulty <= 16) timeLeft = 90; else if (difficulty <= 24) timeLeft = 130; else timeLeft = 210;
 
             scores = [0, 0]; currentPlayer = 1; comboCount = 1;
-            powerUps = { eye: 1, freeze: 1, destroy: 1 };
+            updatePowerUpUI();
             petReady = true; document.getElementById('pet-btn').disabled = false;
             
             updateGameUI(); setupBoard(difficulty); startTimer();
@@ -667,36 +668,80 @@ document.getElementById('menu-screen').classList.remove('hidden');
                 if(document.getElementById('pet-btn')) document.getElementById('pet-btn').disabled = false; 
             }, 30000);
         }
+   function updatePowerUpUI() {
+    document.getElementById('btn-eye').innerText =
+        `👁️ Mắt Thần (${powerUps.eye})`;
 
-        function usePowerUp(type) {
-            if (lockBoard && type !== 'freeze') return;
-            playSound('powerup');
-            
-            if (type === 'eye' && powerUps.eye > 0) {
-                powerUps.eye--; updateGameUI(); lockBoard = true;
-                let hiddenCards = document.querySelectorAll('.card:not(.matched):not(.flipped)');
-                hiddenCards.forEach(c => c.classList.add('flipped'));
-                setTimeout(() => { hiddenCards.forEach(c => c.classList.remove('flipped')); lockBoard = false; }, 2000);
-            } 
-            else if (type === 'freeze' && powerUps.freeze > 0) {
-                powerUps.freeze--; updateGameUI(); isFrozen = true;
-                document.getElementById('timer-box').style.color = '#00f2fe';
-                setTimeout(() => { isFrozen = false; document.getElementById('timer-box').style.color = '#fca5a5'; }, 5000);
-            }
-            else if (type === 'destroy' && powerUps.destroy > 0) {
-                powerUps.destroy--; updateGameUI();
-                let unflipped = Array.from(document.querySelectorAll('.card:not(.matched)'))
-                                     .filter(c => !['💣', '⏳', '⭐'].includes(c.dataset.val));
-                if (unflipped.length < 2) return;
-                let targetVal = unflipped[0].dataset.val;
-                let pair = unflipped.filter(c => c.dataset.val === targetVal);
-                pair.forEach(c => { c.classList.add('flipped', 'matched'); c.removeEventListener('click', flipCard); });
-                
-                scores[currentPlayer - 1] += 10 * comboCount;
-                updateGameUI();
-                checkWinSpecial();
-            }
-        }
+    document.getElementById('btn-freeze').innerText =
+        `❄️ Đóng Băng (${powerUps.freeze})`;
+
+    document.getElementById('btn-destroy').innerText =
+        `💣 Phá Hủy (${powerUps.destroy})`;
+}
+
+function usePowerUp(type) {
+    if (lockBoard && type !== 'freeze') return;
+
+    if (type === 'eye' && powerUps.eye > 0) {
+        playSound('powerup');
+
+        powerUps.eye--;
+        updatePowerUpUI();
+        updateGameUI();
+
+        lockBoard = true;
+
+        let hiddenCards = document.querySelectorAll('.card:not(.matched):not(.flipped)');
+        hiddenCards.forEach(c => c.classList.add('flipped'));
+
+        setTimeout(() => {
+            hiddenCards.forEach(c => c.classList.remove('flipped'));
+            lockBoard = false;
+        }, 2000);
+    }
+
+    else if (type === 'freeze' && powerUps.freeze > 0) {
+        playSound('powerup');
+
+        powerUps.freeze--;
+        updatePowerUpUI();
+        updateGameUI();
+
+        isFrozen = true;
+        document.getElementById('timer-box').style.color = '#00f2fe';
+
+        setTimeout(() => {
+            isFrozen = false;
+            document.getElementById('timer-box').style.color = '#fca5a5';
+        }, 5000);
+    }
+
+    else if (type === 'destroy' && powerUps.destroy > 0) {
+        playSound('powerup');
+
+        powerUps.destroy--;
+        updatePowerUpUI();
+        updateGameUI();
+
+        let unflipped = Array.from(document.querySelectorAll('.card:not(.matched)'))
+            .filter(c => !['💣', '⏳', '⭐'].includes(c.dataset.val));
+
+        if (unflipped.length < 2) return;
+
+        let targetVal = unflipped[0].dataset.val;
+        let pair = unflipped.filter(c => c.dataset.val === targetVal);
+
+        pair.forEach(c => {
+            c.classList.add('flipped', 'matched');
+            c.removeEventListener('click', flipCard);
+        });
+
+        scores[currentPlayer - 1] += 10 * comboCount;
+
+        updateGameUI();
+        checkWinSpecial();
+    }
+}
 
         function startTimer() {
             document.getElementById('time-left').innerText = timeLeft;
@@ -750,7 +795,11 @@ function nextLevel() {
                 
                 userData.coins += coinsEarned;
                 userData.xp += xpEarned;
-                
+                powerUps.eye++;
+powerUps.freeze++;
+powerUps.destroy++;
+
+updatePowerUpUI();
                 // Thuật toán thăng cấp
                 if (userData.xp >= 100) {
                     let levelsGained = Math.floor(userData.xp / 100);
