@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
     <style>
-        /* ================= CSS GIAO DIỆN ================= */
         :root {
             --bg-dark: #0f172a; --panel-bg: rgba(30, 41, 59, 0.85);
             --primary: #3b82f6; --primary-glow: rgba(59, 130, 246, 0.5);
@@ -226,12 +225,12 @@
         </div>
     </div>
 	<div id="custom-modal" class="custom-modal hidden">
-	    <div class="modal-content panel">
-	        <h2 id="modal-title" style="color: var(--warning); margin-bottom: 15px;">Thông Báo</h2>
-	        <p id="modal-desc" style="font-size: 1.15rem; margin: 20px 0; line-height: 1.6; color: var(--text-main);"></p>
-	        <button onclick="closeCustomPopup()" style="width: 100%; background: linear-gradient(135deg, var(--cyan-neon), #0083b0); color: black; margin: 0;">Xác Nhận</button>
-	    </div>
-	</div>
+        <div class="modal-content">
+            <h2 id="modal-title">Thông Báo</h2>
+            <p id="modal-desc"></p>
+            <button onclick="closeCustomPopup()" class="btn btn-primary" style="width: 100%;">Xác Nhận</button>
+        </div>
+    </div>
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
