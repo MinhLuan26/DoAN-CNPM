@@ -374,3 +374,40 @@ button i {
     font-size: 1.1em;
     vertical-align: middle;
 }
+
+.custom-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.custom-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+    display: flex;
+}
+
+.custom-modal .modal-content {
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    transform: scale(1);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 40px rgba(0, 209, 255, 0.4);
+    border: 2px solid var(--cyan-neon);
+    padding: 30px;
+}
+
+.custom-modal.hidden .modal-content {
+    transform: scale(0.8);
+}

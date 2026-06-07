@@ -225,7 +225,13 @@
             <button onclick="quitGame()" class="btn btn-danger" style="margin-top: 25px;">Đầu hàng / Thoát</button>
         </div>
     </div>
-
+	<div id="custom-modal" class="custom-modal hidden">
+	    <div class="modal-content panel">
+	        <h2 id="modal-title" style="color: var(--warning); margin-bottom: 15px;">Thông Báo</h2>
+	        <p id="modal-desc" style="font-size: 1.15rem; margin: 20px 0; line-height: 1.6; color: var(--text-main);"></p>
+	        <button onclick="closeCustomPopup()" style="width: 100%; background: linear-gradient(135deg, var(--cyan-neon), #0083b0); color: black; margin: 0;">Xác Nhận</button>
+	    </div>
+	</div>
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
@@ -345,33 +351,45 @@
             localStorage.setItem('MemGame_Data_' + currentUser, JSON.stringify(userData));
         }
         
+        function showCustomPopup(title, message) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerHTML = message.replace(/\n/g, '<br>');
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeCustomPopup() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
         function checkDailyLogin() {
             const today = new Date().toDateString();
             if (userData.lastLogin !== today) {
                 userData.lastLogin = today;
-                userData.coins += 100;
+                userData.coins += 100; 
                 userData.xp += 20;
-                alert("🎁 CHÀO MỪNG TRỞ LẠI!\nĐiểm danh hàng ngày: Nhận +100 Xu và +20 XP.");
+                showCustomPopup("🎁 CHÀO MỪNG TRỞ LẠI!", "Điểm danh hàng ngày:\nNhận +100 Xu và +20 XP.");
                 updateHUD();
             }
         }
 
         function spinGacha() {
             if (userData.coins < 50) {
-                alert("❌ Không đủ 50 Xu! Hãy vào cày thêm điểm đi bạn.");
+                showCustomPopup("❌ THẤT BẠI", "Không đủ 50 Xu!\nHãy vào game cày thêm điểm đi bạn.");
                 return;
             }
             
             userData.coins -= 50;
             const rand = Math.random();
             let msg = "";
+            let title = "🎰 KẾT QUẢ VÒNG QUAY";
+
             if (rand < 0.40) { 
                 userData.coins += 10; 
-                msg = "Đen thôi đỏ quên đi: Nhận lại 10 Xu 🥲"; 
+                msg = "Đen thôi đỏ quên đi:\nNhận lại 10 Xu 🥲"; 
             }
             else if (rand < 0.70) { 
                 userData.xp += 60; 
-                msg = "Rất tốt: Cày được +60 XP ✨";
+                msg = "Rất tốt:\nCày được +60 XP ✨"; 
                 if (userData.xp >= 100) {
                     userData.level += Math.floor(userData.xp / 100);
                     userData.xp = userData.xp % 100;
@@ -379,17 +397,19 @@
             }
             else if (rand < 0.95) { 
                 userData.coins += 150; 
-                msg = "TRÚNG LỚN: Nhận ngay +150 Xu 💰"; 
+                msg = "TRÚNG LỚN:\nNhận ngay +150 Xu 💰"; 
+                title = "🎉 TRÚNG LỚN 🎉";
             }
             else { 
                 userData.xp += 300; 
                 userData.level += 3;
                 userData.xp = 0;
-                msg = "🎉 JACKPOT SIÊU CẤP 🎉\nĐột phá cảnh giới: Tăng thẳng 3 Cấp độ 🏆"; 
+                msg = "Đột phá cảnh giới:\nTăng thẳng 3 Cấp độ 🏆"; 
+                title = "🎉 JACKPOT SIÊU CẤP 🎉";
             }
             
             updateHUD();
-            alert(`🎰 KẾT QUẢ VÒNG QUAY:\n\n${msg}`);
+            showCustomPopup(title, msg);
         }
 
         function logout() {
