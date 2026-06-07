@@ -11,10 +11,11 @@ const Game = {
     currentPlayer: 1,
     comboCount: 1,
     comboTimer: null,
+	skills: { hint: 2, freeze: 1 },
+	isFrozen: false,
 
     init: () => {
-        const size = parseInt(AppState.difficulty) || 4; // Lấy kích thước lưới, mặc định là 4 nếu lỗi
-        // Lấy config thời gian tương ứng với size (VD: size 6 lấy config của màn 6x6)
+        const size = parseInt(AppState.difficulty) || 4;
         const diffConfig = CONFIG.DIFFICULTY_MAP[size] || { time: 180 };
         
         Game.timeLeft = diffConfig.time;
@@ -23,8 +24,6 @@ const Game = {
         Game.currentPlayer = 1;
         Game.comboCount = 1;
         Game.resetBoard();
-        
-        // Truyền cạnh của lưới (size) vào hàm render
         Game.renderBoard(size);
         Game.updateUI();
         Game.startTimer();
@@ -33,23 +32,16 @@ const Game = {
     renderBoard: (size) => {
         const board = document.getElementById('game-board');
         board.innerHTML = '';
-        
-        // Tự động chia cột dựa trên kích thước lưới
         board.style.gridTemplateColumns = `repeat(${size}, 70px)`;
 
         const totalCells = size * size;
-        const numPairs = Math.floor(totalCells / 2); // Tổng số cặp thẻ cần tạo
-
-        // Mẹo an toàn: Lặp lại mảng EMOJIS nếu số lượng cặp bài cần thiết lớn hơn kho emoji có trong config.
-        // Giúp màn 6x6 (cần 18 cặp) không bị lỗi thẻ trắng nếu config chỉ khai báo 10 emoji.
+        const numPairs = Math.floor(totalCells / 2);
         let gameEmojis = [];
         for (let i = 0; i < numPairs; i++) {
             gameEmojis.push(CONFIG.EMOJIS[i % CONFIG.EMOJIS.length]);
         }
         
         let deck = [...gameEmojis, ...gameEmojis].sort(() => Math.random() - 0.5);
-
-        // Tìm vị trí ô trung tâm nếu tổng số ô là lẻ (VD: lưới 3x3, 5x5)
         const centerIndex = (totalCells % 2 !== 0) ? Math.floor(totalCells / 2) : -1;
         let deckIdx = 0;
 
@@ -57,7 +49,6 @@ const Game = {
             const card = document.createElement('div');
             
             if (i === centerIndex) {
-                // Biến ô chính giữa thành ô trang trí
                 card.classList.add('card');
                 card.style.pointerEvents = 'none';
                 card.style.opacity = '0.4';
@@ -66,7 +57,6 @@ const Game = {
                     <div class="card-back" style="font-size: 20px;">⭐</div>
                 `;
             } else {
-                // Các ô thẻ bài bình thường
                 let emoji = deck[deckIdx++];
                 card.classList.add('card');
                 card.dataset.val = emoji; 
@@ -104,13 +94,9 @@ const Game = {
     handleMatchSuccess: () => {
         Game.firstCard.classList.add('matched');
         Game.secondCard.classList.add('matched');
-        
-        // Tính điểm và Combo
         let points = (CONFIG.POINTS_PER_MATCH || 10) * Game.comboCount;
         Game.scores[Game.currentPlayer - 1] += points;
         Game.matchesFound++;
-        
-        // Tăng combo
         Game.comboCount++;
         clearTimeout(Game.comboTimer);
         Game.comboTimer = setTimeout(() => {
@@ -120,8 +106,6 @@ const Game = {
 
         Game.resetBoard();
         Game.updateUI();
-
-        // Kiểm tra điều kiện thắng dựa trên số cặp bài trên lưới thực tế
         const size = parseInt(AppState.difficulty) || 4;
         const totalPairsNeeded = Math.floor((size * size) / 2);
         
@@ -132,7 +116,7 @@ const Game = {
 
     handleMatchFail: () => {
         Game.lockBoard = true;
-        Game.comboCount = 1; // Mất combo
+        Game.comboCount = 1;
         clearTimeout(Game.comboTimer);
 
         setTimeout(() => {
@@ -190,7 +174,56 @@ const Game = {
                           (Game.scores[1] > Game.scores[0] ? "P2 Thắng!" : "Hòa!");
                 alert(`Trận đấu kết thúc!\n${msg}`);
             }
-            document.getElementById('btn-quit').click(); // Trở về menu
+            document.getElementById('btn-quit').click();
         }, 500);
-    }
+    },
+	
+	resetSkills: () => {
+		Game.skills = { hint: 2, freeze: 1 };
+	    Game.isFrozen = false;
+	    if(document.getElementById('hint-count')) {
+			document.getElementById('hint-count').innerText = Game.skills.hint;
+			document.getElementById('freeze-count').innerText = Game.skills.freeze;
+	    }
+	},
+	
+	useHint: () => {
+		if (Game.skills.hint <= 0 || Game.lockBoard) return;
+	    Game.skills.hint--;
+	    document.getElementById('hint-count').innerText = Game.skills.hint;
+	    let unflipped = Array.from(document.querySelectorAll('.card:not(.flipped)'));
+	    if (unflipped.length < 2) return;
+	    let pairs = {};
+	    unflipped.forEach(card => {
+			let val = card.dataset.value;
+	        if (!pairs[val]) pairs[val] = [];
+	        pairs[val].push(card);
+	    });
+	    let targetPair = Object.values(pairs).find(p => p.length === 2);
+	    if (targetPair) {
+			targetPair[0].classList.add('flipped');
+	        targetPair[1].classList.add('flipped');
+	        Game.lockBoard = true;
+
+	        setTimeout(() => {
+				targetPair[0].classList.remove('flipped');
+	            targetPair[1].classList.remove('flipped');
+	            Game.lockBoard = false;
+	        }, 1500);
+	    }
+	},
+
+	useFreeze: () => {
+		if (Game.skills.freeze <= 0 || Game.isFrozen) return;
+	    Game.skills.freeze--;
+	    document.getElementById('freeze-count').innerText = Game.skills.freeze;
+	    Game.isFrozen = true;
+	    clearInterval(Game.timer);
+	    document.getElementById('game-board').classList.add('frozen-effect');
+	    setTimeout(() => {
+			Game.isFrozen = false;
+	        Game.startTimer();
+	        document.getElementById('game-board').classList.remove('frozen-effect');
+	    }, 5000);
+	},
 };
