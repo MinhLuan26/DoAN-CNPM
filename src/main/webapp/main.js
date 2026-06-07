@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameScreen.classList.add('hidden');
         screen.classList.remove('hidden');
     };
-
+	
     const loadLeaderboard = () => {
         const lb = Auth.getLeaderboard();
         const list = document.getElementById('leaderboard-list');
