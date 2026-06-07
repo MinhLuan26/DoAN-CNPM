@@ -13,8 +13,9 @@ const Game = {
     comboTimer: null,
 	skills: { hint: 2, freeze: 1 },
 	isFrozen: false,
-
+	// Duy làm: Khởi tạo và render bàn cờ
 	init: () => {
+			// logic khởi tạo
 	        const diffKey = AppState.difficulty || '4';
 	        const diffConfig = CONFIG.DIFFICULTY_MAP[diffKey] || { size: 4, time: 90, skills: { hint: 2, freeze: 1 } };
 	        const size = diffConfig.size;
@@ -73,7 +74,7 @@ const Game = {
             board.appendChild(card);
         }
     },
-
+	// Duy làm Xử lý sự kiện lật thẻ
     flipCard: function() {
         if (Game.lockBoard || this === Game.firstCard || this.classList.contains('matched')) return;
 
@@ -165,7 +166,7 @@ const Game = {
             document.getElementById('p2-score-box').classList.toggle('active', Game.currentPlayer === 2);
         }
     },
-
+	// Luân làm Gọi API lưu điểm sau khi thắng
     endGame: (completed) => {
         clearInterval(Game.timer);
         Game.lockBoard = true;
@@ -193,7 +194,7 @@ const Game = {
 			document.getElementById('freeze-count').innerText = Game.skills.freeze;
 	    }
 	},
-	
+	// Luân làm Sử dụng kỹ năng gợi ý (Hint)
 	useHint: () => {
 		if (Game.skills.hint <= 0 || Game.lockBoard) return;
 	    Game.skills.hint--;
@@ -219,7 +220,7 @@ const Game = {
 	        }, 1500);
 	    }
 	},
-
+	// Luân làm: Sử dụng kỹ năng đóng băng thời gian
 	useFreeze: () => {
 		if (Game.skills.freeze <= 0 || Game.isFrozen) return;
 	    Game.skills.freeze--;

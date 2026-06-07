@@ -1,4 +1,6 @@
 const Auth = {
+	// --- Bùi Đoàn Anh Duy phụ trách ---
+	// Gọi API Đăng nhập
     login: async (username, password) => {
         const res = await fetch('/api/auth', {
             method: 'POST',
@@ -8,7 +10,8 @@ const Auth = {
         if (data.success) AppState.currentUser = username;
         return data;
     },
-
+	
+	// Gọi API Đăng ký
     register: async (username, password) => {
         const res = await fetch('/api/auth', {
             method: 'POST',
@@ -16,7 +19,9 @@ const Auth = {
         });
         return await res.json();
     },
-
+	
+	// --- Nguyễn Minh Luân phụ trách ---
+	// Gửi điểm lên server
     saveScore: async (score) => {
         if (!AppState.currentUser) return;
         await fetch('/api/score', {
@@ -24,7 +29,8 @@ const Auth = {
             body: `user=${AppState.currentUser}&score=${score}`
         });
     },
-
+	
+	// Lấy dữ liệu bảng xếp hạng
     getLeaderboard: async () => {
         const res = await fetch('/api/leaderboard');
         return await res.json();

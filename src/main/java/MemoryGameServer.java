@@ -8,21 +8,14 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class MemoryGameServer {
-    // Đường dẫn giả lập Database
     private static final String USERS_FILE = "users.txt";
     private static final String SCORES_FILE = "scores.txt";
 
     public static void main(String[] args) throws Exception {
-        // Đảm bảo file tồn tại
         new File(USERS_FILE).createNewFile();
         new File(SCORES_FILE).createNewFile();
-
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        
-        // Phục vụ tất cả các file HTML, CSS, JS
         server.createContext("/", new StaticFileHandler());
-        
-        // Các API Backend
         server.createContext("/api/auth", new AuthHandler());
         server.createContext("/api/score", new ScoreHandler());
         server.createContext("/api/leaderboard", new LeaderboardHandler());
@@ -31,7 +24,7 @@ public class MemoryGameServer {
         server.start();
         System.out.println("Backend Java đã khởi chạy thành công tại http://localhost:8080");
     }
-
+    // Bùi Đoàn Anh Duy phụ trách
     // Xử lý nạp các file giao diện (Cải tiến để đọc được cả thư mục CSS và JS)
     static class StaticFileHandler implements HttpHandler {
         @Override
@@ -64,7 +57,7 @@ public class MemoryGameServer {
             os.close();
         }
     }
-
+    // --- Bùi Đoàn Anh Duy phụ trách Logic Đăng ký/Đăng nhập [UC1, UC2] ---
     // Tính năng: Xử lý Đăng nhập / Đăng ký (Đọc/Ghi file)
     static class AuthHandler implements HttpHandler {
         @Override
@@ -101,7 +94,7 @@ public class MemoryGameServer {
             }
         }
     }
-
+    // --- Nguyễn Minh Luân phụ trách Logic Lưu điểm và Logic Bảng xếp hạng [UC7, UC8] ---
     // Tính năng: Nhận điểm số từ Web và lưu trữ
     static class ScoreHandler implements HttpHandler {
         @Override
@@ -156,8 +149,8 @@ public class MemoryGameServer {
             PlayerScore(String user, int score) { this.user = user; this.score = score; }
         }
     }
-
-    // --- Các hàm tiện ích (Utility) ---
+    
+    // --- Anh Duy làm Các hàm tiện ích (Utility) ---
     private static Map<String, String> parseQuery(String query) {
         Map<String, String> result = new HashMap<>();
         if (query == null || query.isEmpty()) return result;
