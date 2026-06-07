@@ -151,13 +151,16 @@
             <div class="menu-layout">
                 <div class="box">
                     <h3 class="panel-title" style="font-size: 1.4rem;">🎮 Bắt đầu trò chơi</h3>
-                    <select id="difficulty">
-        				<option value="2">Màn 1 (2x2)</option>
-				        <option value="3">Màn 2 (3x3)</option>
-				        <option value="4">Màn 3 (4x4)</option>
-				        <option value="5">Màn 4 (5x5)</option>
-				        <option value="6">Màn 5 (6x6)</option>
-    				</select>
+                    <select id="difficulty" class="input-field">
+					    <option value="2">Màn 2x2 (Rất dễ)</option>
+					    <option value="4" selected>Màn 4x4 (Bình thường)</option>
+					    <option value="5">Màn 5x5 (Hơi khó)</option>
+					    <option disabled>--- Chuỗi thử thách 6x6 ---</option>
+					    <option value="6_1">6x6 Cấp 1: Tập sự (180s)</option>
+					    <option value="6_2">6x6 Cấp 2: Thử thách (140s)</option>
+					    <option value="6_3">6x6 Cấp 3: Áp lực (100s - Ít kỹ năng)</option>
+					    <option value="6_4">6x6 Cấp 4: Địa ngục (70s - Cấm kỹ năng)</option>
+					</select>
                     <select id="mode">
                         <option value="1">1 Người chơi (Cày xu & Điểm)</option>
                         <option value="2">2 Người chơi (Đối kháng)</option>
@@ -637,6 +640,16 @@
             const list = document.getElementById('leaderboard-list');
             list.innerHTML = lb.length ? '' : '<li style="color:#cbd5e1;">Chưa có kỷ lục nào</li>';
             lb.forEach((e, i) => list.innerHTML += `<li><span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':''} ${e.user}</span> <strong>${e.score} pts</strong></li>`);
+        }
+        
+        function resetUserDataForNewSession() {
+            if (typeof userData !== 'undefined') {
+                userData.coins = 0;
+                userData.questDone = false;
+            }
+            if (typeof updateHUD === 'function') {
+                updateHUD();
+            }
         }
     </script>
 </body>

@@ -14,20 +14,27 @@ const Game = {
 	skills: { hint: 2, freeze: 1 },
 	isFrozen: false,
 
-    init: () => {
-        const size = parseInt(AppState.difficulty) || 4;
-        const diffConfig = CONFIG.DIFFICULTY_MAP[size] || { time: 180 };
-        
-        Game.timeLeft = diffConfig.time;
-        Game.matchesFound = 0;
-        Game.scores = [0, 0];
-        Game.currentPlayer = 1;
-        Game.comboCount = 1;
-        Game.resetBoard();
-        Game.renderBoard(size);
-        Game.updateUI();
-        Game.startTimer();
-    },
+	init: () => {
+	        const diffKey = AppState.difficulty || '4';
+	        const diffConfig = CONFIG.DIFFICULTY_MAP[diffKey] || { size: 4, time: 90, skills: { hint: 2, freeze: 1 } };
+	        const size = diffConfig.size;
+	        Game.timeLeft = diffConfig.time;
+	        Game.skills = { ...diffConfig.skills };
+	        Game.matchesFound = 0;
+	        Game.scores = [0, 0];
+	        Game.currentPlayer = 1;
+	        Game.comboCount = 1;
+	        Game.isFrozen = false;
+	        if(document.getElementById('hint-count')) {
+	            document.getElementById('hint-count').innerText = Game.skills.hint;
+	            document.getElementById('freeze-count').innerText = Game.skills.freeze;
+	        }
+
+	        Game.resetBoard();
+	        Game.renderBoard(size);
+	        Game.updateUI();
+	        Game.startTimer();
+	    },
 
     renderBoard: (size) => {
         const board = document.getElementById('game-board');
