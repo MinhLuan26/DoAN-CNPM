@@ -346,3 +346,31 @@ button:not(.btn-danger):not(.skill-btn):hover {
 #leaderboard-list li strong { color: var(--emerald-neon); text-shadow: 0 0 10px var(--emerald-glow); font-size: 1.2rem; }
 
 #auth-msg { color: var(--ruby-neon); font-size: 1rem; margin-top: 20px; font-weight: 700; text-shadow: 0 0 10px var(--ruby-glow); }
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.5); 
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, var(--cyan-neon), var(--emerald-neon));
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #fff;
+    box-shadow: 0 0 10px var(--cyan-neon);
+}
+
+body {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="%2300FF84" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M4.93 4.93l2.83 2.83"></path><path d="M16.24 16.24l2.83 2.83"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M6.34 17.66l2.83-2.83"></path><path d="M14.83 9.17l2.83-2.83"></path></svg>') 14 14, auto !important;
+}
+
+button, .card, select {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="%2300D1FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 8v8"></path><path d="M8 12h8"></path></svg>') 14 14, pointer !important;
+}
+
+button i {
+    margin-right: 8px;
+    font-size: 1.1em;
+    vertical-align: middle;
+}

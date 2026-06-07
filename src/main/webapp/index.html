@@ -121,10 +121,13 @@
         <div class="top-bar">
             <h1 class="game-logo">MEMORY MATCH</h1>
             <div id="user-hud" class="user-hud hidden">
-                <span>👤 <span id="hud-user">Player</span> (Lv.<span id="hud-level">1</span>)</span>
-                <div class="level-bar" title="Kinh nghiệm"><div class="level-fill" id="hud-xp"></div></div>
-                <span class="coin-display">💰 <span id="hud-coins">0</span></span>
-            </div>
+			    <span>👤 <span id="hud-user">Player</span></span>
+			    <span id="hud-rank" style="margin-left: 10px; font-weight: 900; font-size: 1.1rem;"></span>
+			    
+			    <span style="margin-left: 15px;">(Lv.<span id="hud-level">1</span>)</span>
+			    <div class="level-bar" title="Kinh nghiệm"><div class="level-fill" id="hud-xp"></div></div>
+			    <span class="coin-display">💰 <span id="hud-coins">0</span></span>
+			</div>
         </div>
 
        <div id="auth-screen" class="auth-layout">
@@ -171,13 +174,17 @@
                     <button onclick="logout()" class="btn btn-danger" style="width: 100%; margin-top: 10px;">Đăng xuất</button>
                 </div>
                 <div class="box">
-                    <h3 class="panel-title" style="font-size: 1.4rem;">🛒 Cửa hàng Theme</h3>
-                    <div id="shop-list"></div>
-                    <div style="margin-top: 20px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.3);">
-                        <h4 style="margin:0 0 10px 0; color: var(--success);">📜 Nhiệm vụ hàng ngày</h4>
-                        <div id="quest-text">Thắng 1 ván (0/1) - Thưởng: 50 Xu</div>
-                    </div>
-                </div>
+				    <h3 class="panel-title" style="font-size: 1.4rem;">🛒 Cửa hàng & Sự kiện</h3>
+				    <div id="shop-list"></div>
+				    <button onclick="spinGacha()" class="btn btn-warning" style="width: 100%; margin-top: 15px; padding: 12px; background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; font-weight: bold; border-radius: 10px; border: none; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);">
+				        🎰 VÒNG QUAY NHÂN PHẨM (50 Xu)
+				    </button>
+				
+				    <div style="margin-top: 20px; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.3);">
+				        <h4 style="margin:0 0 10px 0; color: var(--success);">📜 Nhiệm vụ hàng ngày</h4>
+				        <div id="quest-text">Thắng 1 ván (0/1) - Thưởng: 50 Xu</div>
+				    </div>
+				</div>
             </div>
             <div class="box" style="margin-top: 20px;">
                 <h3 style="color: #10b981; margin-bottom: 10px;">🏆 Bảng xếp hạng Top 5</h3>
@@ -312,14 +319,77 @@
                 msgBox.innerText = "";
             }
         }
-
+        
+        const defaultData = { coins: 0, themes: ['default'], currentTheme: 'default', level: 1, xp: 0, questDone: false, lastLogin: null };
+        
         function updateHUD() {
             document.getElementById('hud-user').innerText = currentUser;
             document.getElementById('hud-coins').innerText = userData.coins;
             document.getElementById('hud-level').innerText = userData.level;
             document.getElementById('hud-xp').style.width = `${(userData.xp % 100)}%`;
             document.getElementById('quest-text').innerText = userData.questDone ? "✅ Đã hoàn thành nhiệm vụ!" : "Thắng 1 ván (0/1) - Thưởng: 50 Xu";
+            let rank = { name: 'Đồng 🥉', color: '#cd7f32' };
+            if (userData.level >= 5) rank = { name: 'Bạc 🥈', color: '#c0c0c0' };
+            if (userData.level >= 10) rank = { name: 'Vàng 🥇', color: '#ffd700' };
+            if (userData.level >= 20) rank = { name: 'Bạch Kim 💎', color: '#00e5ff' };
+            if (userData.level >= 30) rank = { name: 'Kim Cương 💠', color: '#b9f2ff' };
+            if (userData.level >= 50) rank = { name: 'Cao Thủ 👑', color: '#ff007f' };
+
+            const rankEl = document.getElementById('hud-rank');
+            if (rankEl) {
+                rankEl.innerText = rank.name;
+                rankEl.style.color = rank.color;
+                rankEl.style.textShadow = `0 0 10px ${rank.color}`;
+            }
+
             localStorage.setItem('MemGame_Data_' + currentUser, JSON.stringify(userData));
+        }
+        
+        function checkDailyLogin() {
+            const today = new Date().toDateString();
+            if (userData.lastLogin !== today) {
+                userData.lastLogin = today;
+                userData.coins += 100;
+                userData.xp += 20;
+                alert("🎁 CHÀO MỪNG TRỞ LẠI!\nĐiểm danh hàng ngày: Nhận +100 Xu và +20 XP.");
+                updateHUD();
+            }
+        }
+
+        function spinGacha() {
+            if (userData.coins < 50) {
+                alert("❌ Không đủ 50 Xu! Hãy vào cày thêm điểm đi bạn.");
+                return;
+            }
+            
+            userData.coins -= 50;
+            const rand = Math.random();
+            let msg = "";
+            if (rand < 0.40) { 
+                userData.coins += 10; 
+                msg = "Đen thôi đỏ quên đi: Nhận lại 10 Xu 🥲"; 
+            }
+            else if (rand < 0.70) { 
+                userData.xp += 60; 
+                msg = "Rất tốt: Cày được +60 XP ✨";
+                if (userData.xp >= 100) {
+                    userData.level += Math.floor(userData.xp / 100);
+                    userData.xp = userData.xp % 100;
+                }
+            }
+            else if (rand < 0.95) { 
+                userData.coins += 150; 
+                msg = "TRÚNG LỚN: Nhận ngay +150 Xu 💰"; 
+            }
+            else { 
+                userData.xp += 300; 
+                userData.level += 3;
+                userData.xp = 0;
+                msg = "🎉 JACKPOT SIÊU CẤP 🎉\nĐột phá cảnh giới: Tăng thẳng 3 Cấp độ 🏆"; 
+            }
+            
+            updateHUD();
+            alert(`🎰 KẾT QUẢ VÒNG QUAY:\n\n${msg}`);
         }
 
         function logout() {
@@ -387,21 +457,18 @@
             else timeLeft = 100;
 
             scores = [0, 0]; currentPlayer = 1; comboCount = 1;
-            powerUps = { eye: 1, freeze: 1, destroy: 1 }; // Reset PowerUps
+            powerUps = { eye: 1, freeze: 1, destroy: 1 };
             updatePowerUpUI();
             petReady = true; document.getElementById('pet-btn').disabled = false;
             
             updateGameUI(); 
-            setupBoard(size); // Truyền KÍCH THƯỚC CẠNH VÀO ĐÂY
+            setupBoard(size);
             startTimer();
         }
-
-        // TẠO BÀN CHƠI LƯỚI VUÔNG CHUẨN
+        
         function setupBoard(size) {
             const board = document.getElementById('game-board');
             board.innerHTML = '';
-            
-            // Xây dựng ma trận lưới
             board.style.display = 'grid';
             board.style.gridTemplateColumns = `repeat(${size}, 70px)`;
             board.style.gridTemplateRows = `repeat(${size}, 70px)`;
@@ -409,11 +476,9 @@
             board.style.margin = '20px auto';
             board.style.justifyContent = 'center';
 
-            let totalCards = size * size; // Tổng số ô vuông. Vd 5x5 = 25 ô
+            let totalCards = size * size;
             let pairsNeeded = Math.floor(totalCards / 2);
             let hasSpecials = totalCards >= 16;
-            
-            // Nhường chỗ cho 2 thẻ đặc biệt
             if (hasSpecials) pairsNeeded -= 1; 
             
             let emojisPool = THEMES_DATA[userData.currentTheme].emojis;
